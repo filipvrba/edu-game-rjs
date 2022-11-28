@@ -1,4 +1,6 @@
 import '../css/style.css'
+import 'Pillar', './objects/pillar'
+import 'Images', './objects/images'
 
 document.querySelector('#app').innerHTML = "<canvas-2d></canvas-2d>"
 canvas_2d = document.querySelector('canvas-2d')
@@ -10,3 +12,9 @@ def update_scene_pos()
 end
 update_scene_pos()
 
+images = Images.new
+scene_r.add images, 'images'
+
+pillar = Pillar.new Pillar::BREAK_UP_LEFT
+pillar.scale = 5
+scene_r.add pillar, 'pillar'

@@ -1,0 +1,16 @@
+# https://img.itch.zone/aW1hZ2UvNDY4NzkyLzIzOTYwMjMucG5n/original/pUNrO5.png
+
+export default class Images < BasicObject
+  attr_reader :mainlev
+
+  def initialize
+    super
+
+    @mainlev = Image.new
+    @mainlev.src = '/assets/canves/mainlev_build.png'
+  end
+
+  def draw r
+    r.imageSmoothingEnabled = false
+  end
+end

@@ -1,0 +1,28 @@
+export default class Pillar < Object2D
+  BREAK_UP_LEFT = [832, 288, 32, 92]
+  BREAK_DOWN_LEFT = [832, 404, 32, 92]
+  STABLE_LEFT = [880, 400, 32, 96]
+  STABLE_RIGHT = [928, 400, 32, 96]
+  BREAK_DOWN_RIGHT = [976, 404, 32, 92]
+  BREAK_UP_RIGHT = [976, 288, 32, 92]
+
+  attr_accessor :scale
+
+  def initialize type
+    super
+
+    @scale = 2
+    @type = type
+  end
+
+  def ready()
+    @img = this.get_scene(true).find_child('images').mainlev
+
+    this.position = Vector2.new(-((@type[2] * @scale)/2), -((@type[3] * @scale)/2))
+  end
+
+  def draw r
+    r.drawImage(@img, @type[0], @type[1], @type[2], @type[3],
+      this.global_position.x, this.global_position.y, @type[2] * @scale, @type[3] * @scale)
+  end
+end
