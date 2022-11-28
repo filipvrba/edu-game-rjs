@@ -1,0 +1,12 @@
+import '../css/style.css'
+
+document.querySelector('#app').innerHTML = "<canvas-2d></canvas-2d>"
+canvas_2d = document.querySelector('canvas-2d')
+scene_r = canvas_2d.scene_r
+scene_r.connect "resize", lambda { update_scene_pos() }
+
+def update_scene_pos()
+  scene_r.global_position = canvas_2d.win_center_position
+end
+update_scene_pos()
+

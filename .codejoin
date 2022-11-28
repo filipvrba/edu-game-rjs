@@ -1,0 +1,7 @@
+{
+  "name": "edu-game-rjs",
+  "ignore": [
+    "FILE_N_.*.rjs",
+    "test.rjs"
+  ]
+}

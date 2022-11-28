@@ -1,0 +1,4 @@
+#!/bin/bash
+
+. $(pwd)/bin/watch &
+npm run dev
