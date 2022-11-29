@@ -1,0 +1,6 @@
+import 'MainLev', '../mainlev'
+
+export default class Wall < MainLev
+  BREAK_RIGHT = [832, 512, 80, 80]
+  BREAK_LEFT = [924, 512, 84, 80]
+end

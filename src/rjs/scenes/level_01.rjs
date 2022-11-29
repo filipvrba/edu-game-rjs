@@ -1,0 +1,26 @@
+import 'Pillar', '../objects/mainlev/pillar'
+import 'Wall', '../objects/mainlev/wall'
+
+export default class Level01 < Scene
+  def initialize
+    super
+
+    @pillar = Pillar.new Pillar::BREAK_UP_LEFT
+    @wall_r = Wall.new Wall::BREAK_RIGHT
+    @wall_l = Wall.new Wall::BREAK_LEFT
+    @wall = Object2D.new
+  end
+
+  def ready()
+    super
+
+    self.add @wall, 'wall'
+    
+    @wall_r.scale = 1
+    @wall.add @wall_r, 'wall_r'
+
+    @wall_l.scale = 1
+    @wall.add @wall_l, 'wall_l'
+    # @wall_l.position.x += @wall_r.type[2]
+  end
+end

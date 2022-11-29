@@ -333,6 +333,41 @@ class BasicObject < Dispatcher
   end
 end
 
+class Grid < BasicObject
+  attr_accessor :scale
+
+  def initialize vector
+    super
+
+    @vector = vector
+    @scale = 1
+  end
+
+  def draw r
+    x = @vector.x * @scale
+    y = @vector.y * @scale
+    r.lineWidth = 1
+
+    # x
+    (0...r.canvas.width / x).step(1) do |i|
+      r.beginPath()
+      r.moveTo(x * i, 0)
+      r.lineTo(x * i, r.canvas.height)
+      r.fill()
+      r.stroke()
+    end
+
+    # y
+    (0...r.canvas.height / y).step(1) do |i|
+      r.beginPath()
+      r.moveTo(0, y * i)
+      r.lineTo(r.canvas.width, y * i)
+      r.fill()
+      r.stroke()
+    end
+  end
+end
+
 class Object2D < BasicObject
   attr_reader :position
   attr_writer :position, :global_position
@@ -384,12 +419,14 @@ class Scene < Object2D
 
   def initialize
     super
-    this.id = "scene_r"
+    self.id = "scene_r"
   end
 
-  def ready
+  def ready()
     unless this.parent
-      this.global_position = this.position
+      self.global_position = self.position
+    else
+      self.update_global_position()
     end
   end
 end
@@ -430,7 +467,7 @@ class Canvas2DElement < HTMLElement
 
     @renderer = TDRenderer.new init_canvas("c2d")
     @scene_r = Scene.new
-    @scene_r.ready
+    @scene_r.ready()
     resize()  # change renderer size
   end
 

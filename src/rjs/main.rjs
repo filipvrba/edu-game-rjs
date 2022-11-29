@@ -1,20 +1,23 @@
 import '../css/style.css'
-import 'Pillar', './objects/pillar'
 import 'Images', './objects/images'
+import 'Level01', './scenes/level_01'
 
 document.querySelector('#app').innerHTML = "<canvas-2d></canvas-2d>"
 canvas_2d = document.querySelector('canvas-2d')
 scene_r = canvas_2d.scene_r
-scene_r.connect "resize", lambda { update_scene_pos() }
+# scene_r.connect "resize", lambda { update_scene_pos() }
 
-def update_scene_pos()
-  scene_r.global_position = canvas_2d.win_center_position
-end
-update_scene_pos()
+# def update_scene_pos()
+#   scene_r.global_position = canvas_2d.win_center_position
+# end
+# update_scene_pos()
 
 images = Images.new
 scene_r.add images, 'images'
 
-pillar = Pillar.new Pillar::BREAK_UP_LEFT
-pillar.scale = 5
-scene_r.add pillar, 'pillar'
+grid = Grid.new Vector2.new(16, 16)
+grid.scale = 1
+scene_r.add grid, 'grid'
+
+level_01 = Level01.new
+scene_r.add level_01, 'level_01'

@@ -1,0 +1,10 @@
+export default class MainLev < Sprite
+  def initialize type
+    super
+  end
+
+  def ready()
+    super
+    self.img = this.get_scene(true).find_child('images').mainlev
+  end
+end
