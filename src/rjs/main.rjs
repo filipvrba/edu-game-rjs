@@ -5,18 +5,19 @@ import 'Level01', './scenes/level_01'
 document.querySelector('#app').innerHTML = "<canvas-2d></canvas-2d>"
 canvas_2d = document.querySelector('canvas-2d')
 scene_r = canvas_2d.scene_r
-# scene_r.connect "resize", lambda { update_scene_pos() }
+scene_r.connect "resize", lambda { update_scene_pos() }
 
-# def update_scene_pos()
-#   scene_r.global_position = canvas_2d.win_center_position
-# end
-# update_scene_pos()
+def update_scene_pos()
+  scene_r.global_position = canvas_2d.win_center_position
+end
+update_scene_pos()
 
 images = Images.new
 scene_r.add images, 'images'
 
 grid = Grid.new Vector2.new(16, 16)
 grid.scale = 1
+grid.visible = false
 scene_r.add grid, 'grid'
 
 level_01 = Level01.new

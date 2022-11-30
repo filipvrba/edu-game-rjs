@@ -1,0 +1,44 @@
+export default class GrottoTile < Sprite
+  attr_reader :img, :size
+
+  def initialize s_sprite
+    super
+    @s_sprite = s_sprite
+  end
+
+  def ready()
+    super
+    @size = Vector2.new 16, 16
+    @img = this.get_scene(true).find_child('images').grotto_tile
+
+    unless @s_sprite
+      @s_sprites = generate_s_sprites @size
+    end
+  end
+
+  def get_s_sprite id
+    return @s_sprites[id]
+  end
+
+  def generate_s_sprites size
+    w_img = @img.width
+    h_img = @img.height
+
+    size_w = w_img / size.w
+    size_h = h_img / size.h
+
+    console.log w_img, h_img
+
+    result_h = { }
+    i = 0
+    (0...size_h).step(1) do |y|
+      (0...size_w).step(1) do |x|
+        position_vec = Vector2.new(x * size.x, y * size.y)
+        result_h[i] = SSprite.new(position_vec, size)
+        i += 1
+      end
+    end
+    
+    return result_h
+  end
+end

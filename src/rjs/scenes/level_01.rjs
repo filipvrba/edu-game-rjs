@@ -1,26 +1,42 @@
 import 'Pillar', '../objects/mainlev/pillar'
 import 'Wall', '../objects/mainlev/wall'
+import 'GrottoTile', '../objects/grotto_tile'
+import ['get_json'], '../helper'
+
+# import "*", as: "level_01_json", from: "../../../src/maps/level_01.json"
 
 export default class Level01 < Scene
   def initialize
     super
 
-    @pillar = Pillar.new Pillar::BREAK_UP_LEFT
-    @wall_r = Wall.new Wall::BREAK_RIGHT
-    @wall_l = Wall.new Wall::BREAK_LEFT
-    @wall = Object2D.new
+    @scale = 1.5
   end
 
   def ready()
-    super
+    grotto_tile = GrottoTile.new nil
+    self.add grotto_tile, 'grotto_tile_init'
 
-    self.add @wall, 'wall'
-    
-    @wall_r.scale = 1
-    @wall.add @wall_r, 'wall_r'
+    get_json('/maps/level_01.json') do |level_01_json|
 
-    @wall_l.scale = 1
-    @wall.add @wall_l, 'wall_l'
-    # @wall_l.position.x += @wall_r.type[2]
+      tile_ids = level_01_json.layers[0].data
+      i = 0
+      (0...level_01_json.height).step(1) do |y|
+        (0...level_01_json.width).step(1) do |x|
+          id = tile_ids[i] + level_01_json.compressionlevel
+          console.log grotto_tile
+          s_sprite = grotto_tile.get_s_sprite(id)
+          grt = GrottoTile.new s_sprite
+          self.add grt, "grotto_tile_#{i}"
+          grt.scale = @scale
+          grt.position = Vector2.new(x * s_sprite.size.x * grt.scale, y * s_sprite.size.y * grt.scale)
+          
+          i += 1
+        end
+      end
+
+      self.position = Vector2.new(-((level_01_json.width * @scale * grotto_tile.size.w) / 2),
+                                  -((level_01_json.height * @scale * grotto_tile.size.h) / 2))
+      super
+    end 
   end
 end

@@ -1,0 +1,9 @@
+export def get_json url, &callback
+  fetch(url)
+  .then(lambda do |response|
+    response.json()
+  end)
+  .then(lambda do |data|
+    callback(data)
+  end)
+end

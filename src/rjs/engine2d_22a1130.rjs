@@ -81,13 +81,20 @@ class Dispatcher
   end
 end
 class Vector2
-	attr_reader :x, :y
-	attr_writer :x, :y
+	attr_accessor :x, :y
 
   def initialize x = 0, y = 0
     @x = x
     @y = y
   end
+
+	def w
+		return @x
+	end
+
+	def h
+		return @y
+	end
 
   def length
 		return Math.sqrt(@x * @x + @y * @y)
@@ -166,6 +173,14 @@ class Vector2
 			@y /= l
     end
 		return self
+  end
+end
+class SSprite
+  attr_accessor :position, :size
+
+  def initialize source_position, source_size
+    @position  = source_position
+    @size      = source_size
   end
 end
 
@@ -333,6 +348,46 @@ class BasicObject < Dispatcher
   end
 end
 
+class Grid < BasicObject
+  attr_accessor :scale, :visible
+
+  def initialize vector
+    super
+
+    @vector = vector
+    @scale = 1
+    @visible = visible
+  end
+
+  def draw r
+    unless @visible
+      return
+    end
+
+    x = @vector.x * @scale
+    y = @vector.y * @scale
+    r.lineWidth = 1
+
+    # x
+    (0...r.canvas.width / x).step(1) do |i|
+      r.beginPath()
+      r.moveTo(x * i, 0)
+      r.lineTo(x * i, r.canvas.height)
+      r.fill()
+      r.stroke()
+    end
+
+    # y
+    (0...r.canvas.height / y).step(1) do |i|
+      r.beginPath()
+      r.moveTo(0, y * i)
+      r.lineTo(r.canvas.width, y * i)
+      r.fill()
+      r.stroke()
+    end
+  end
+end
+
 class Object2D < BasicObject
   attr_reader :position
   attr_writer :position, :global_position
@@ -384,12 +439,14 @@ class Scene < Object2D
 
   def initialize
     super
-    this.id = "scene_r"
+    self.id = "scene_r"
   end
 
-  def ready
+  def ready()
     unless this.parent
-      this.global_position = this.position
+      self.global_position = self.position
+    else
+      self.update_global_position()
     end
   end
 end
@@ -397,24 +454,24 @@ end
 class Sprite < Object2D
   attr_accessor :scale, :type, :img
 
-  def initialize type
+  def initialize s_sprite
     super
 
     @scale = 1
-    @type = type
+    @s_sprite = s_sprite
     @img = nil
   end
 
   def ready()
-    if @type 
-      this.position = Vector2.new(-((@type[2] * @scale)/2), -((@type[3] * @scale)/2))
+    if @s_sprite 
+      this.position = Vector2.new(-((@s_sprite.size.w * @scale)/2), -((@s_sprite.size.h * @scale)/2))
     end
   end
 
   def draw r
-    if @img and @type
-      r.drawImage(@img, @type[0], @type[1], @type[2], @type[3],
-        this.global_position.x, this.global_position.y, @type[2] * @scale, @type[3] * @scale)
+    if @img and @s_sprite
+      r.drawImage(@img, @s_sprite.position.x, @s_sprite.position.y, @s_sprite.size.w, @s_sprite.size.h,
+        this.global_position.x, this.global_position.y, @s_sprite.size.w * @scale, @s_sprite.size.h * @scale)
     end
   end
 end
@@ -430,7 +487,7 @@ class Canvas2DElement < HTMLElement
 
     @renderer = TDRenderer.new init_canvas("c2d")
     @scene_r = Scene.new
-    @scene_r.ready
+    @scene_r.ready()
     resize()  # change renderer size
   end
 

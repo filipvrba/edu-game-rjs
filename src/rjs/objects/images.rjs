@@ -1,13 +1,16 @@
 # https://img.itch.zone/aW1hZ2UvNDY4NzkyLzIzOTYwMjMucG5n/original/pUNrO5.png
 
 export default class Images < BasicObject
-  attr_reader :mainlev
+  attr_reader :mainlev, :grotto_tile
 
   def initialize
     super
 
     @mainlev = Image.new
     @mainlev.src = '/assets/canves/mainlev_build.png'
+
+    @grotto_tile = Image.new
+    @grotto_tile.src = '/assets/grotto/tileset_2.png'
   end
 
   def draw r
