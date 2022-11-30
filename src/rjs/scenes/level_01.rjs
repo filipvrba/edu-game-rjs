@@ -3,40 +3,52 @@ import 'Wall', '../objects/mainlev/wall'
 import 'GrottoTile', '../objects/grotto_tile'
 import ['get_json'], '../helper'
 
-# import "*", as: "level_01_json", from: "../../../src/maps/level_01.json"
+import "*", as: "level_01_json", from: "../../../src/maps/level_01.json"
 
 export default class Level01 < Scene
   def initialize
     super
+    @sprite_ready_handler = lambda { |s| sprite_ready(s) }
 
-    @scale = 1.5
+    @scale = 1.3
   end
 
   def ready()
-    grotto_tile = GrottoTile.new nil
-    self.add grotto_tile, 'grotto_tile_init'
+    @grotto = GrottoTile.new
+    @grotto.connect GrottoTile::SPRITE_READY, @sprite_ready_handler
+    self.add @grotto, 'grotto'
 
-    get_json('/maps/level_01.json') do |level_01_json|
+    @tile_ids = level_01_json.layers[0].data
+    @size_w = level_01_json.width
+    @size_h = level_01_json.height
 
-      tile_ids = level_01_json.layers[0].data
-      i = 0
-      (0...level_01_json.height).step(1) do |y|
-        (0...level_01_json.width).step(1) do |x|
-          id = tile_ids[i] + level_01_json.compressionlevel
-          console.log grotto_tile
-          s_sprite = grotto_tile.get_s_sprite(id)
-          grt = GrottoTile.new s_sprite
-          self.add grt, "grotto_tile_#{i}"
-          grt.scale = @scale
-          grt.position = Vector2.new(x * s_sprite.size.x * grt.scale, y * s_sprite.size.y * grt.scale)
-          
-          i += 1
-        end
+    self.position = Vector2.new(-(@size_w * @scale * @grotto.size.w) / 2,
+                                -(@size_h * @scale * @grotto.size.h) / 2)
+    super
+  end
+
+  def sprite_ready sprites
+    i = 0
+    (0...@size_h).step(1) do |y|
+      (0...@size_w).step(1) do |x|
+        id = @tile_ids[i] + level_01_json.compressionlevel
+
+        sprite = Sprite.new sprites[id]
+        sprite.img = @grotto.img
+        @grotto.add sprite, "grotto_#{i}"
+        sprite.scale = @scale
+        sprite.position = Vector2.new(x * @grotto.size.x * sprite.scale,
+                                      y * @grotto.size.y * sprite.scale)
+
+        i += 1
       end
+    end
 
-      self.position = Vector2.new(-((level_01_json.width * @scale * grotto_tile.size.w) / 2),
-                                  -((level_01_json.height * @scale * grotto_tile.size.h) / 2))
-      super
-    end 
+    @grotto.update_global_position()
+  end
+
+  def free
+    @grotto.disconnect GrottoTile::SPRITE_READY, @sprite_ready_handler
+    super
   end
 end
