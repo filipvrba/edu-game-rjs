@@ -10,7 +10,7 @@ export default class Level01 < Level
     @sprite_ready_handler = lambda { |s| sprite_ready(s) }
     @json_ready_handler   = lambda { |j| json_ready(j) }
 
-    @scale = 1.3
+    @scale = 2
   end
 
   def ready()
