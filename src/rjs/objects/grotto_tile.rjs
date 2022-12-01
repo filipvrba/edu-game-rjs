@@ -21,7 +21,7 @@ export default class GrottoTile < Object2D
   end
 
   def get_s_sprite id
-    return @s_sprites[id]
+    return @sprites[id]
   end
 
   def generate_s_sprites size

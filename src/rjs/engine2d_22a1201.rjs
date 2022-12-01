@@ -175,6 +175,18 @@ class Vector2
 		return self
   end
 end
+class Net
+
+  def self.get_json url, &callback
+    fetch(url)
+    .then(lambda do |response|
+      response.json()
+    end)
+    .then(lambda do |data|
+      callback(data)
+    end)
+  end
+end
 
 class TDRenderer
   DIMENSION = '2d'
@@ -349,14 +361,15 @@ class BasicObject < Dispatcher
 end
 
 class Object2D < BasicObject
-  attr_reader :position
-  attr_writer :position, :global_position
+  attr_accessor :position, :scale
+  attr_writer :global_position
 
   def initialize
     super
 
     @position = Vector2.new
     @global_position = Vector2.new
+    @scale = 1
   end
 
   def global_position

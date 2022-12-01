@@ -6,8 +6,9 @@ import "*", as: "level_01_json", from: "../../../src/maps/level_01.json"
 
 export default class Level01 < Level
   def initialize
-    super
+    super "maps/level_01.json"
     @sprite_ready_handler = lambda { |s| sprite_ready(s) }
+    @json_ready_handler   = lambda { |j| json_ready(j) }
 
     @scale = 1.3
   end
@@ -27,16 +28,25 @@ export default class Level01 < Level
   end
 
   def sprite_ready sprites
-    dimension = Vector2.new(@size_w, @size_h)
-    Level.dimension_loop(dimension) do |vec, i|
-      id = @tile_ids[i] + level_01_json.compressionlevel
+    generate_level()
+  end
 
-      sprite = Sprite.new sprites[id]
-      sprite.img = @grotto.img
-      @grotto.add sprite, "grotto_#{i}"
-      sprite.scale = @scale
-      sprite.position = Vector2.new(vec.x * @grotto.size.x * sprite.scale,
-                                    vec.y * @grotto.size.y * sprite.scale)
+  def generate_level()
+    
+    dimension = Vector2.new(@size_w, @size_h)
+    tile_dimensions = level_01_json.layers
+    tile_dimensions.forEach do |td|
+      tile_ids = td.data
+      Level.dimension_loop(dimension) do |vec, i|
+        id = tile_ids[i] + level_01_json.compressionlevel
+        
+        sprite = Sprite.new @grotto.get_s_sprite(id)
+        sprite.img = @grotto.img
+        @grotto.add sprite, "grotto_#{i}"
+        sprite.scale = @scale
+        sprite.position = Vector2.new(vec.x * @grotto.size.x * sprite.scale,
+                                      vec.y * @grotto.size.y * sprite.scale)
+      end
     end
 
     @grotto.update_global_position()
@@ -44,6 +54,7 @@ export default class Level01 < Level
 
   def free
     @grotto.disconnect GrottoTile::SPRITE_READY, @sprite_ready_handler
+    self.disconnect Level::JSON_READY, @json_ready_handler
     super
   end
 end
