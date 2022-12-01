@@ -28,19 +28,14 @@ export default class GrottoTile < Object2D
     w_img = @img.width
     h_img = @img.height
 
-    size_w = w_img / size.w
-    size_h = h_img / size.h
+    dimension = Vector2.new(w_img / size.w, h_img / size.h)
 
     result_h = { }
-    i = 0
-    (0...size_h).step(1) do |y|
-      (0...size_w).step(1) do |x|
-        position_vec = Vector2.new(x * size.x, y * size.y)
-        result_h[i] = SSprite.new(position_vec, size)
-        i += 1
-      end
+    Level.dimension_loop(dimension) do |vec, i|
+      position_vec = Vector2.new(vec.x * @size.x, vec.y * @size.y)
+      result_h[i] = SSprite.new(position_vec, @size)
     end
-    
+
     return result_h
   end
 end

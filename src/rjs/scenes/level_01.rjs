@@ -1,11 +1,10 @@
 import 'Pillar', '../objects/mainlev/pillar'
 import 'Wall', '../objects/mainlev/wall'
 import 'GrottoTile', '../objects/grotto_tile'
-import ['get_json'], '../helper'
 
 import "*", as: "level_01_json", from: "../../../src/maps/level_01.json"
 
-export default class Level01 < Scene
+export default class Level01 < Level
   def initialize
     super
     @sprite_ready_handler = lambda { |s| sprite_ready(s) }
@@ -28,20 +27,16 @@ export default class Level01 < Scene
   end
 
   def sprite_ready sprites
-    i = 0
-    (0...@size_h).step(1) do |y|
-      (0...@size_w).step(1) do |x|
-        id = @tile_ids[i] + level_01_json.compressionlevel
+    dimension = Vector2.new(@size_w, @size_h)
+    Level.dimension_loop(dimension) do |vec, i|
+      id = @tile_ids[i] + level_01_json.compressionlevel
 
-        sprite = Sprite.new sprites[id]
-        sprite.img = @grotto.img
-        @grotto.add sprite, "grotto_#{i}"
-        sprite.scale = @scale
-        sprite.position = Vector2.new(x * @grotto.size.x * sprite.scale,
-                                      y * @grotto.size.y * sprite.scale)
-
-        i += 1
-      end
+      sprite = Sprite.new sprites[id]
+      sprite.img = @grotto.img
+      @grotto.add sprite, "grotto_#{i}"
+      sprite.scale = @scale
+      sprite.position = Vector2.new(vec.x * @grotto.size.x * sprite.scale,
+                                    vec.y * @grotto.size.y * sprite.scale)
     end
 
     @grotto.update_global_position()

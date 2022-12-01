@@ -175,14 +175,6 @@ class Vector2
 		return self
   end
 end
-class SSprite
-  attr_accessor :position, :size
-
-  def initialize source_position, source_size
-    @position  = source_position
-    @size      = source_size
-  end
-end
 
 class TDRenderer
   DIMENSION = '2d'
@@ -206,6 +198,14 @@ class TDRenderer
 
     scene.emit_signal Dispatcher::DRAW, renderer
     scene.emit_signal Dispatcher::UPDATE, @clock.delta_time
+  end
+end
+class SSprite
+  attr_accessor :position, :size
+
+  def initialize source_position, source_size
+    @position  = source_position
+    @size      = source_size
   end
 end
 
@@ -348,46 +348,6 @@ class BasicObject < Dispatcher
   end
 end
 
-class Grid < BasicObject
-  attr_accessor :scale, :visible
-
-  def initialize vector
-    super
-
-    @vector = vector
-    @scale = 1
-    @visible = visible
-  end
-
-  def draw r
-    unless @visible
-      return
-    end
-
-    x = @vector.x * @scale
-    y = @vector.y * @scale
-    r.lineWidth = 1
-
-    # x
-    (0...r.canvas.width / x).step(1) do |i|
-      r.beginPath()
-      r.moveTo(x * i, 0)
-      r.lineTo(x * i, r.canvas.height)
-      r.fill()
-      r.stroke()
-    end
-
-    # y
-    (0...r.canvas.height / y).step(1) do |i|
-      r.beginPath()
-      r.moveTo(0, y * i)
-      r.lineTo(r.canvas.width, y * i)
-      r.fill()
-      r.stroke()
-    end
-  end
-end
-
 class Object2D < BasicObject
   attr_reader :position
   attr_writer :position, :global_position
@@ -447,6 +407,59 @@ class Scene < Object2D
       self.global_position = self.position
     else
       self.update_global_position()
+    end
+  end
+end
+
+class Grid < BasicObject
+  attr_accessor :scale, :visible
+
+  def initialize size_v
+    super
+
+    @size_v = size_v
+    @scale = 1
+    @visible = true
+  end
+
+  def draw r
+    unless @visible
+      return
+    end
+
+    x = @size_v.w * @scale
+    y = @size_v.h * @scale
+    r.lineWidth = 1
+
+    # x
+    (0...r.canvas.width / x).step(1) do |i|
+      r.beginPath()
+      r.moveTo(x * i, 0)
+      r.lineTo(x * i, r.canvas.height)
+      r.fill()
+      r.stroke()
+    end
+
+    # y
+    (0...r.canvas.height / y).step(1) do |i|
+      r.beginPath()
+      r.moveTo(0, y * i)
+      r.lineTo(r.canvas.width, y * i)
+      r.fill()
+      r.stroke()
+    end
+  end
+end
+
+class Level < Scene
+  def self.dimension_loop(dimension, &callback)
+    i = 0
+    (0...dimension.h).step(1) do |y|
+      (0...dimension.w).step(1) do |x|
+        vec = Vector2.new(x, y)
+        callback(vec, i)
+        i += 1
+      end
     end
   end
 end
