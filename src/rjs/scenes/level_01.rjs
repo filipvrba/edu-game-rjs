@@ -36,7 +36,6 @@ export default class Level01 < Level
     self.add player, "player"
 
     @tiles.update_global_position()
-    player.update_global_position()
   end
 
   def generate_level()

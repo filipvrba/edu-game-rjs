@@ -95,6 +95,12 @@ class Dispatcher
   end
 end
 class Vector2
+	UP    = Vector2.new( 0, -1)
+	DOWN  = Vector2.new( 0,  1)
+	LEFT  = Vector2.new(-1,  0)
+	RIGHT = Vector2.new( 1,  0)
+	ZERO  = Vector2.new( 0,  0)
+
 	attr_accessor :x, :y
 
   def initialize x = 0, y = 0
@@ -223,7 +229,7 @@ class TDRenderer
     renderer.clearRect(0, 0, @canvas.width, @canvas.height)
 
     scene.emit_signal(Dispatcher::UPDATE, @clock.delta_time() do |f_dt|
-      scene.emit_signal Dispatcher::PHYSICS_UPDATE, f_dt
+      scene.emit_signal(Dispatcher::PHYSICS_UPDATE, f_dt)
     end)
     scene.emit_signal Dispatcher::DRAW, renderer
   end
@@ -267,7 +273,11 @@ class BasicObject < Dispatcher
       end
 
       @children.push(object)
-      # TODO: updateGlobalPosition
+      
+      if defined? object.update_global_position
+        object.update_global_position()
+      end
+
       add_signals(object)
     else
       console.error "#{self.class.name}.add: object not an instance of #{self.class.name}"
@@ -456,7 +466,7 @@ end
 
 class AnimationSprite < Object2D
   attr_accessor :frame_speed
-  attr_reader :curent_tile
+  attr_reader :current_tile
 
   def initialize frame_speed = 0.25
     super
@@ -466,7 +476,7 @@ class AnimationSprite < Object2D
     @tiles  = BasicObject.new
     @sprite = Sprite.new
 
-    @curent_tile = nil
+    @current_tile = nil
     @bitwase = 0
     @scale = 1
     @time = 0
@@ -494,7 +504,7 @@ class AnimationSprite < Object2D
     unless is_update_unlock
       return
     end
-    if @curent_tile == nil
+    if @current_tile == nil
       return
     end
 
@@ -505,8 +515,8 @@ class AnimationSprite < Object2D
     @time += dt
     if @time >= @frame_speed
       @time = 0
-      @curent_tile.id_tile = (@curent_tile.id_tile + 1) % Object.keys(@curent_tile.sprites).length
-      @sprite.s_sprite = @curent_tile.sprites[@curent_tile.id_tile]
+      @current_tile.id_tile = (@current_tile.id_tile + 1) % Object.keys(@current_tile.sprites).length
+      @sprite.s_sprite = @current_tile.sprites[@current_tile.id_tile]
     end
   end
 
@@ -521,16 +531,16 @@ class AnimationSprite < Object2D
   end
 
   def play_tile id_tile
-    @curent_tile = @tiles.find_child(id_tile)
+    @current_tile = @tiles.find_child(id_tile)
 
-    if @curent_tile == nil
+    if @current_tile == nil
       console.error "Since this tile '#{id_tile}', isn't on the list, it won't launch. " +
                     "Add it, please."
       return
     end
 
-    @curent_tile.id_tile = 0
-    @sprite.img = @curent_tile.img
+    @current_tile.id_tile = 0
+    @sprite.img = @current_tile.img
   end
 
   def free()
@@ -580,6 +590,40 @@ class Grid < BasicObject
       r.lineTo(r.canvas.width, y * i)
       r.fill()
       r.stroke()
+    end
+  end
+end
+
+class KinematicBody < Object2D
+  attr_reader :physics_direction, :is_move, :is_move_vertical
+
+  def initialize
+    super
+
+    @previoud_position = Vector2.new
+    @physics_direction = Vector2.new
+
+    @is_move          = false
+    @is_move_vertical = false
+  end
+
+  def update dt
+    @previoud_position = self.position.clone
+  end
+
+  def physics_update dt
+    @physics_direction = self.position.clone.sub(@previoud_position).normalized
+
+    if @physics_direction.equals(Vector2.new)
+      @is_move = false
+    else
+      @is_move = true
+    end
+
+    if @physics_direction.equals(Vector2::UP) or @physics_direction.equals(Vector2::DOWN)
+      @is_move_ladder = true
+    elsif @physics_direction.equals(Vector2::LEFT) or @physics_direction.equals(Vector2::RIGHT)
+      @is_move_ladder = false
     end
   end
 end
