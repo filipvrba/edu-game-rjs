@@ -1,16 +1,22 @@
 # https://img.itch.zone/aW1hZ2UvNDY4NzkyLzIzOTYwMjMucG5n/original/pUNrO5.png
 
 export default class Images < BasicObject
-  attr_reader :mainlev, :grotto_tile
+  attr_reader :grotto_tile, :player_idle, :player_run, :player_ladder
 
   def initialize
     super
 
-    @mainlev = Image.new
-    @mainlev.src = '/assets/canves/mainlev_build.png'
-
     @grotto_tile = Image.new
     @grotto_tile.src = '/assets/grotto/tileset_2.png'
+
+    @player_idle = Image.new
+    @player_idle.src = '/assets/grotto/player-idle.png'
+
+    @player_run = Image.new
+    @player_run.src = '/assets/grotto/player-run.png'
+
+    @player_ladder = Image.new
+    @player_ladder.src = '/assets/grotto/player-ladder.png'
   end
 
   def draw r

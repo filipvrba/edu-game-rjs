@@ -1,0 +1,67 @@
+import 'TPlayerIdle', './tiles/t_player_idle'
+import 'TPlayerRun', './tiles/t_player_run'
+import 'TPlayerLadder', './tiles/t_player_ladder'
+
+export default class Player < Object2D
+  def initialize
+    super
+    @scale = 2
+    @is_move = false
+
+    @animation_sprite = AnimationSprite.new
+    @animation_sprite.scale = @scale
+    @previoud_position = Vector2.new
+  end
+
+  def ready()
+    @t_player_idle = TPlayerIdle.new
+    self.add @t_player_idle, "t_player_idle"
+
+    @t_player_run = TPlayerRun.new
+    self.add @t_player_run, "t_player_run"
+
+    @t_player_ladder = TPlayerLadder.new
+    self.add @t_player_ladder, "t_player_ladder"
+    
+    self.add @animation_sprite, "animation_sprite"
+    @animation_sprite.add_tile @t_player_idle
+    @animation_sprite.add_tile @t_player_run
+    @animation_sprite.add_tile @t_player_ladder
+
+    @animation_sprite.play_tile @t_player_idle.id
+  end
+
+  def update dt
+    @previoud_position = self.position.clone
+    
+    if self.position.x < 300
+      self.position.x += 50 * dt
+    end
+
+    if @is_move
+      unless @animation_sprite.curent_tile.id == @t_player_run.id
+        @animation_sprite.play_tile @t_player_run.id
+      end
+    else
+      unless @animation_sprite.curent_tile.id == @t_player_idle.id
+        @animation_sprite.play_tile @t_player_idle.id
+      end
+    end
+  end
+
+  def physics_update dt
+    if self.position.clone.sub(@previoud_position).normalized.equals(Vector2.new)
+      @is_move = false
+    else
+      @is_move = true
+    end
+  end
+
+  def draw r
+    r.beginPath()
+    r.strokeStyle = "red"
+    r.rect(self.global_position.x, self.global_position.y,
+           @t_player_idle.size.w * @scale, @t_player_idle.size.h * @scale)
+    r.stroke()
+  end
+end

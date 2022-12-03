@@ -2,6 +2,7 @@ import '../css/style.css'
 import 'Images', './objects/images'
 import 'Level01', './scenes/level_01'
 
+
 document.querySelector('#app').innerHTML = "<canvas-2d></canvas-2d>"
 canvas_2d = document.querySelector('canvas-2d')
 scene_r = canvas_2d.scene_r
@@ -15,10 +16,10 @@ update_scene_pos()
 images = Images.new
 scene_r.add images, 'images'
 
-grid = Grid.new Vector2.new(16, 16)
-grid.scale = 1
-grid.visible = false
-scene_r.add grid, 'grid'
-
 level_01 = Level01.new
 scene_r.add level_01, 'level_01'
+
+grid = Grid.new Vector2.new(16, 16)
+grid.scale = level_01.scale
+grid.visible = true
+scene_r.add grid, 'grid'
