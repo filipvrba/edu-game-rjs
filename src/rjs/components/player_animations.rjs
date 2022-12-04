@@ -7,11 +7,9 @@ export default class PlayerAnimations < Object2D
 
   def initialize
     super
-
-    @animation_sprite = AnimationSprite.new
   end
 
-  def ready
+  def ready()
     @t_player_idle = TPlayerIdle.new
     self.parent.add @t_player_idle, "t_player_idle"
 
@@ -21,6 +19,7 @@ export default class PlayerAnimations < Object2D
     @t_player_ladder = TPlayerLadder.new
     self.parent.add @t_player_ladder, "t_player_ladder"
     
+    @animation_sprite = AnimationSprite.new self.parent.sprite
     @animation_sprite.scale = self.parent.scale
     self.parent.add @animation_sprite, "animation_sprite"
     @animation_sprite.add_tile @t_player_idle
@@ -28,11 +27,13 @@ export default class PlayerAnimations < Object2D
     @animation_sprite.add_tile @t_player_ladder
 
     @animation_sprite.play_tile @t_player_idle.id
+
+    self.parent.sprite.offset.y = -@animation_sprite.current_tile.size.h
   end
 
   def update dt
     if self.parent.is_move
-      if self.parent.is_move_ladder
+      if self.parent.is_move_vertical
         unless @animation_sprite.current_tile.id == @t_player_ladder.id
           @animation_sprite.play_tile @t_player_ladder.id
         end

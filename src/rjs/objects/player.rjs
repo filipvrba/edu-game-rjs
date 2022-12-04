@@ -1,34 +1,31 @@
 import 'PlayerAnimations', '../components/player_animations'
 
 export default class Player < KinematicBody
+  attr_accessor :is_sprite_edge
+  attr_reader :sprite
+
   def initialize
     super
     @scale = 2
+    self.visible_point = true
+
+    @sprite = Sprite.new
+    @sprite.scale = @scale
+    @sprite.centered = true
 
     @player_animations = PlayerAnimations.new
   end
 
   def ready()
     self.add @player_animations, 'player_animations'
+    self.add @sprite, 'player_sprite'
   end
 
-  def update dt
+  def physics_update dt
+    if self.position.y < (32 * 8) + (32 * 3)
+      self.position.y += 50 * dt
+    end
+
     super
-
-    if self.position.x < 300
-      self.position.x += 50 * dt
-    end
-  end
-
-  def draw r
-    tile = @player_animations.animation_sprite.current_tile
-
-    unless tile == nil
-      r.beginPath()
-      r.strokeStyle = "red"
-      r.rect(self.global_position.x, self.global_position.y,
-            tile.size.w * @scale, tile.size.h * @scale)
-      r.stroke()
-    end
   end
 end

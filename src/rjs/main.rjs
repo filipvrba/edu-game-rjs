@@ -20,6 +20,6 @@ level_01 = Level01.new
 scene_r.add level_01, 'level_01'
 
 grid = Grid.new Vector2.new(16, 16)
-grid.scale = level_01.scale
-grid.visible = false
+grid.scale = 2
+grid.visible = true
 scene_r.add grid, 'grid'

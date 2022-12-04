@@ -16,6 +16,8 @@ class Clock
       (0...dt_count).step(1) do |_|
         callback(@fix_dt)
       end
+    else
+      callback(@fix_dt)
     end
 
     @time = current_time
@@ -95,6 +97,12 @@ class Dispatcher
   end
 end
 class Vector2
+	UP    = Vector2.new( 0, -1)
+	DOWN  = Vector2.new( 0,  1)
+	LEFT  = Vector2.new(-1,  0)
+	RIGHT = Vector2.new( 1,  0)
+	ZERO  = Vector2.new( 0,  0)
+
 	attr_accessor :x, :y
 
   def initialize x = 0, y = 0
@@ -223,7 +231,7 @@ class TDRenderer
     renderer.clearRect(0, 0, @canvas.width, @canvas.height)
 
     scene.emit_signal(Dispatcher::UPDATE, @clock.delta_time() do |f_dt|
-      scene.emit_signal Dispatcher::PHYSICS_UPDATE, f_dt
+      scene.emit_signal(Dispatcher::PHYSICS_UPDATE, f_dt)
     end)
     scene.emit_signal Dispatcher::DRAW, renderer
   end
@@ -267,7 +275,11 @@ class BasicObject < Dispatcher
       end
 
       @children.push(object)
-      # TODO: updateGlobalPosition
+      
+      if defined? object.update_global_position
+        object.update_global_position()
+      end
+
       add_signals(object)
     else
       console.error "#{self.class.name}.add: object not an instance of #{self.class.name}"
@@ -312,25 +324,25 @@ class BasicObject < Dispatcher
     return self
   end
 
-  def free
+  def free()
     if @children.length > 0
       _children = @children.slice()  # Clone array
       _children.forEach do |child|
-        child.free
+        child.free()
       end
     else
       if @parent
-        free_signals
+        free_signals()
         @parent.remove(self)
       end
     end
 
     if @parent
-      @parent.free
+      @parent.free()
     end
   end
 
-  def free_signals
+  def free_signals()
     # this.signals = nil
     if defined? self.physics_update
       get_scene(true).disconnect(Dispatcher::PHYSICS_UPDATE, self.physics_update_handler)
@@ -356,10 +368,15 @@ class BasicObject < Dispatcher
         end
       else
         super_class_name = Object.getPrototypeOf(
-                           Object.getPrototypeOf(_scene)).constructor.name
+                           Object.getPrototypeOf(_parent)).constructor.name
 
-        if _scene.constructor.name == Scene::NAME_SCENE ||
-           super_class_name == Scene::NAME_SCENE
+        is_scene_name = _parent.constructor.name == Scene::NAME_SCENE ||
+                        super_class_name == Scene::NAME_SCENE
+        is_level_name = _parent.constructor.name == 'Level' ||
+                        super_class_name == 'Level'
+
+        if is_scene_name or is_level_name
+          _scene = _parent
           break  
         end
       end
@@ -370,7 +387,7 @@ class BasicObject < Dispatcher
 
     return _scene 
   end
-
+  
   def find_child(id)
     result = nil
     for i in @children
@@ -449,6 +466,87 @@ class Scene < Object2D
   end
 end
 
+class AnimationSprite < BasicObject
+  attr_accessor :frame_speed
+  attr_reader :current_tile
+
+  def initialize sprite, frame_speed = 0.25
+    super
+    @handlers = {}
+    @handlers_length = lambda { Object.keys(@handlers).length }
+
+    @tiles  = BasicObject.new
+    @sprite = sprite
+
+    @current_tile = nil
+    @bitwase = 0
+    @time = 0
+    @frame_speed = frame_speed
+  end
+
+  def ready()
+    self.add @tiles, 'tiles'
+  end
+
+  def is_update_unlock
+    result = true
+    @tiles.children.forEach do |t|
+      if Math.pow( @handlers_length.call() + 1, 2) & @handlers[t.id].bit == 0
+        result = false
+      end
+    end
+    return result
+  end
+
+  def update dt
+    unless is_update_unlock
+      return
+    end
+    if @current_tile == nil
+      return
+    end
+
+    @time += dt
+    if @time >= @frame_speed
+      @time = 0
+      @current_tile.id_tile = (@current_tile.id_tile + 1) % Object.keys(@current_tile.sprites).length
+      @sprite.s_sprite = @current_tile.sprites[@current_tile.id_tile]
+    end
+  end
+
+  def add_tile tile
+    @handlers[tile.id] = {
+      "bit": Math.pow( @handlers_length.call() + 1, 2),
+      "fn": lambda { @bitwase |= @handlers[tile.id].bit }
+    }
+
+    tile.connect(Tile::SPRITE_READY, @handlers[tile.id].fn)
+    @tiles.add tile, tile.id
+  end
+
+  def play_tile id_tile
+    @current_tile = @tiles.find_child(id_tile)
+
+    if @current_tile == nil
+      console.error "Since this tile '#{id_tile}', isn't on the list, it won't launch. " +
+                    "Add it, please."
+      return
+    end
+
+    @current_tile.id_tile = 0
+    @sprite.img = @current_tile.img
+  end
+
+  def free()
+    @tiles.children.forEach do |t|
+      t.disconnect(Tile::SPRITE_READY, @handlers[t.id].fn)
+    end
+    @handlers = nil
+
+    super
+  end
+end
+
 class Grid < BasicObject
   attr_accessor :scale, :visible
 
@@ -468,6 +566,7 @@ class Grid < BasicObject
     x = @size_v.w * @scale
     y = @size_v.h * @scale
     r.lineWidth = 1
+    r.strokeStyle = "black"
 
     # x
     (0...r.canvas.width / x).step(1) do |i|
@@ -489,6 +588,71 @@ class Grid < BasicObject
   end
 end
 
+class KinematicBody < Object2D
+  attr_accessor :visible_point
+  attr_reader :physics_direction, :is_move, :is_move_vertical
+
+  def initialize
+    super
+
+    @previoud_position = Vector2.new
+    @physics_direction = Vector2.new
+
+    @is_move          = false
+    @is_move_vertical = false
+    @visible_point    = false
+  end
+
+  def update dt
+    @previoud_position = self.position.clone
+  end
+
+  def physics_update dt
+    @physics_direction = self.position.clone.sub(@previoud_position).normalized
+
+    if @physics_direction.equals(Vector2.new)
+      @is_move = false
+    else
+      @is_move = true
+    end
+
+    if @physics_direction.equals(Vector2::UP) or @physics_direction.equals(Vector2::DOWN)
+      @is_move_vertical = true
+    elsif @physics_direction.equals(Vector2::LEFT) or @physics_direction.equals(Vector2::RIGHT)
+      @is_move_vertical = false
+    end
+
+    self.update_global_position()
+  end
+
+  def draw r
+    unless visible_point
+      return
+    end
+
+    green = "#79b415"
+    red   = "#cb3950"
+    width = 20
+    r.lineWidth = 2
+
+    # x
+    r.strokeStyle = red
+    r.beginPath()
+    r.moveTo(self.global_position.x - width, self.global_position.y)
+    r.lineTo(self.global_position.x + width, self.global_position.y)
+    r.fill()
+    r.stroke()
+
+    # y
+    r.strokeStyle = green
+    r.beginPath()
+    r.moveTo(self.global_position.x, self.global_position.y - width)
+    r.lineTo(self.global_position.x, self.global_position.y + width)
+    r.fill()
+    r.stroke()
+  end
+end
+
 class Level < Scene
   def self.dimension_loop(dimension, &callback)
     i = 0
@@ -504,6 +668,8 @@ end
 
 class Sprite < Object2D
   attr_accessor :scale, :s_sprite, :img
+  attr_accessor :centered, :offset, :visible_edge
+  attr_reader :global_offset
 
   def initialize s_sprite
     super
@@ -511,23 +677,58 @@ class Sprite < Object2D
     @scale = 1
     @s_sprite = s_sprite
     @img = nil
+
+    @centered = false
+    @offset = Vector2.new
+    @global_offset = Vector2.new
+    @visible_edge = false
   end
 
   def ready()
     if @s_sprite 
-      this.position = Vector2.new(-((@s_sprite.size.w * @scale)/2), -((@s_sprite.size.h * @scale)/2))
+      set_position()
+    end
+  end
+
+  def set_position()
+    this.position = centered_position
+  end
+
+  def centered_position
+    Vector2.new(-((@s_sprite.size.w * @scale)/2), -((@s_sprite.size.h * @scale)/2))
+  end
+
+  def update dt
+    if @s_sprite
+      offset_global_pos = Vector2.new(
+        @offset.x + this.global_position.x,
+        @offset.y + this.global_position.y
+      )
+      @global_offset = @centered ?
+          centered_position.clone.add(offset_global_pos)
+        : offset_global_pos
     end
   end
 
   def draw r
     if @img and @s_sprite
       r.drawImage(@img, @s_sprite.position.x, @s_sprite.position.y, @s_sprite.size.w, @s_sprite.size.h,
-        this.global_position.x, this.global_position.y, @s_sprite.size.w * @scale, @s_sprite.size.h * @scale)
+        @global_offset.x, @global_offset.y, @s_sprite.size.w * @scale, @s_sprite.size.h * @scale)
+    end
+
+    if @visible_edge
+      if @s_sprite
+        r.beginPath()
+        r.strokeStyle = "blue"
+        r.rect(@global_offset.x, @global_offset.y,
+          @s_sprite.size.w * @scale, @s_sprite.size.h * @scale)
+        r.stroke()
+      end
     end
   end
 end
 
-class Tile < Object2D
+class Tile < BasicObject
   SPRITE_READY = "gtspr"
 
   attr_accessor :img, :size
@@ -641,7 +842,7 @@ class Canvas2DElement < HTMLElement
   end
 
   def disconnectedCallback()
-    @scene_r.free
+    @scene_r.free()
     window.removeEventListener RESIZE, @resizeHandler
   end
 end

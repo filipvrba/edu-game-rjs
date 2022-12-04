@@ -32,7 +32,7 @@ export default class Level01 < Level
     generate_level()
 
     player = Player.new
-    player.position = Vector2.new(@grotto.size.x * 1, @grotto.size.y * 1)
+    player.position = Vector2.new((@grotto.size.x * @scale) * 2.5, (@grotto.size.y * @scale) * 3)
     self.add player, "player"
 
     @tiles.update_global_position()
