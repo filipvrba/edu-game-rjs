@@ -1,0 +1,26 @@
+export default class LevelAnimations < AnimationPlayer
+  def player
+    self.parent.find_child("player")
+  end
+
+  def initialize
+    super
+  end
+
+  def ready()
+    animation = SAnimation.new
+    t_player_y = animation.add_track('player.position.y')
+    t_player_y.add_insert_key(3, player.position.y)
+    t_player_y.add_insert_key(6, 352)
+
+    t_player_x = animation.add_track("player.position.x")
+    t_player_x.add_insert_key(0, 0)
+    t_player_x.add_insert_key(1, 0)
+    t_player_x.add_insert_key(2, 80)
+    t_player_x.add_insert_key(7, 80)
+    t_player_x.add_insert_key(10, 352)
+
+    self.add_animation("move_ladder_down", animation)
+    self.play("move_ladder_down")
+  end
+end

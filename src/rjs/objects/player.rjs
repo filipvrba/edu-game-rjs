@@ -22,9 +22,9 @@ export default class Player < KinematicBody
   end
 
   def physics_update dt
-    if self.position.y < (32 * 8) + (32 * 3)
-      self.position.y += 50 * dt
-    end
+    # if self.position.y < (32 * 8) + (32 * 3)
+    #   self.position.y += 50 * dt
+    # end
 
     super
   end

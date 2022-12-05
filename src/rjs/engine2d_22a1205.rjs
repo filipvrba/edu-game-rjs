@@ -236,20 +236,39 @@ class TDRenderer
     scene.emit_signal Dispatcher::DRAW, renderer
   end
 end
+
 class SAnimation
   attr_reader :tracks
 
   def initialize
-    @tracks = Map.new
+    @tracks = []
   end
 
   def add_track object_attr
-    @tracks.set object_attr, Map.new
-    return object_attr
+    track = STrack.new object_attr
+    @tracks << track
+    return track
   end
 
-  def add_insert_key id, time, key
-    @tracks.get(id).set(time, key)
+  def is_done
+    result = true
+    (0...@tracks.length).step(1) do |i| track = @tracks[i]
+      unless track.is_done
+        result = false
+        break
+      end
+    end
+    return result
+  end
+end
+class SKey
+  attr_accessor :is_done
+  attr_reader :time, :value
+
+  def initialize time, value
+    @time    = time
+    @value   = value
+    @is_done = false
   end
 end
 class SSprite
@@ -258,6 +277,47 @@ class SSprite
   def initialize source_position, source_size
     @position  = source_position
     @size      = source_size
+  end
+end
+
+class STrack
+  attr_accessor :track
+  attr_reader :keys
+
+  def initialize track = nil
+    @track = track
+    @keys = []
+    @key_last = nil
+  end
+
+  def add_insert_key time, key
+    unless @track
+      console.warn "There is no declared 'track' value."
+    end 
+
+    @keys << SKey.new(time, key)
+  end
+
+  def is_done
+    result = true
+    (0...keys.length).step(1) do |i| key = @keys[i]
+      unless key.is_done
+        result = false
+        break
+      end
+    end
+    return result
+  end
+
+  def key_last
+    result = @keys[0]
+    (0...keys.length).step(1) do |i| key = @keys[i]
+      if key.is_done
+        result = key
+      end
+    end
+
+    return result
   end
 end
 
@@ -485,29 +545,19 @@ end
 
 
 class AnimationPlayer < BasicObject
-  PROCESS = 0
-  STOP    = 1
-  SUM     = 2
-
   ANIM_FINISH = "apf"
+
+  def animation
+    return @animations[@current_animation]
+  end
 
   def initialize
     super
 
-    @animations = Map.new
-    default_values()
-  end
-
-  def default_values()
-    @values_mask = []
-    @animation = Map.new
-    @history_anim = {}
-
-    @time = 0
-    @last_time = 0
+    @animations = {}
     @playback_active = false
-    @value_zero = nil
     @current_animation = nil
+    @time = 0
   end
 
   def update dt
@@ -516,148 +566,53 @@ class AnimationPlayer < BasicObject
     end
 
     @time += dt
-    attr_id = 0
-    @animation.tracks.forEach do |attr_values, attr_name|
-      
-      obj = {
-        values: attr_values,
-        name: attr_name,
-        id: attr_id
-      }
-      update_animation(dt, obj)
-      attr_id += 1
-    end
 
-    if is_anim_finish
-      animation_finished()
-    end
-  end
-
-  def update_animation(dt, options)
-    value_id = 0
-    options.values.forEach do |value, time|
-      
-      obj = {
-        attribute: options,
-        values: {
-          value: value,
-          time: time,
-          id: value_id
-        }
-      }
-      update_anim_value(dt, obj)
-      value_id += 1
+    unless animation.is_done
+      animation.tracks.forEach do |track|
+        unless track.is_done
+          (0...track.keys.length).step(1) do |i| key = track.keys[i]
+            unless key.is_done
+              update_key(dt, track, key)
+              break
+            end
+          end
+        end
+      end
+    else
+      stop()
+      self.emit_signal(ANIM_FINISH, @current_animation)
     end
   end
 
-  def animation_finished()
-    self.emit_signal ANIM_FINISH, @current_animation
-    default_values()
+  def update_key dt, track, key
+    value = (key.value - track.key_last.value) / (key.time - track.key_last.time) * dt
+    value = value ? value : 0
+    apply_str(track, "+= #{value}")
+
+    if @time >= key.time
+      key.is_done = true
+      apply_str(track, "= #{key.value}")
+      return
+    end
   end
 
-  def is_anim_finish
-    _sum  = 0
-    _stop = 0
-    
-    (0...@values_mask[SUM].length).step(1) do |i|
-      _sum  += @values_mask[SUM][i]
-      _stop += @values_mask[STOP][i]
-    end
-
-    return _sum == _stop
-  end
-
-  def update_anim_value(dt, options)
-    l_con_bit = lambda do |id|
-      @values_mask[id][options.attribute.id] & get_unique_id(options) != 0
-    end
-
-    if l_con_bit(PROCESS) or l_con_bit(STOP)
-      process_anim(dt, options)
-    end
-
-    init_stop_anim(options)
-  end
-
-  def get_unique_id(options, add = 0)
-    return 2 ** (options.attribute.id + options.values.id + add)
-  end
-
-  def process_anim dt, options
-    arr_attr_values = Array.from(@animation.tracks.get(options.attribute.name))
-    last_values = arr_attr_values[options.values.id - 1]
-
-    time = (options.values.value - last_values[1]) /
-           (options.values.time - last_values[0]) * dt
-    
-    apply_str = "this.#{options.attribute.name} += #{time}"
-    
-    eval(apply_str)
-  end
-
-  def init_stop_anim(options)
-    l_con_bit = lambda do |id, add|
-      @values_mask[id][options.attribute.id] |= get_unique_id(options, add)
-    end
-    id_con_bit_stop = @values_mask[STOP][options.attribute.id] &
-                      get_unique_id(options) == 0
-
-    if @time >= id_con_bit_stop
-      apply_str = "this.#{options.attribute.name} = #{options.values.value}"
-      console.log apply_str
-      eval(apply_str)
-
-      l_con_bit(STOP, 0)
-      l_con_bit(PROCESS, 1)
-    end
+  def apply_str track, str_code = ""
+    return eval("this.#{track.track} #{str_code.toString()}")
   end
 
   def add_animation name, animation
-    @animations.set(name, animation)
+    @animations[name] = animation
   end
 
   def play name
-    unless @animations.has(name)
-      return
-    end
-
     @current_animation = name
-    @animation = @animations.get(name)
-
-    @values_mask = Array.new(3)
-    (0...@values_mask.length).step(1) do |i|
-      @values_mask[i] = Array.new(@animation.tracks.size)
-    end
-
-    init_start_anim()
     @playback_active = true
   end
 
-  def init_start_anim()
-    attr_id = 0
-    @animation.tracks.forEach do |attr_values|
-      values_id = 0
-      attr_values.forEach do |values|
-        
-        obj = {
-          attribute: {
-            id: attr_id
-          },
-          values: {
-            id: values_id
-          }
-        }
-        @values_mask[SUM][attr_id] |= get_unique_id(obj)
-
-        values_id += 1
-      end
-
-      attr_id
-    end
-  end
-
-  def stop(reset = true)
-    default_values()
+  def stop()
+    @current_animation = nil
+    @playback_active = false
+    @time = 0
   end
 end
 

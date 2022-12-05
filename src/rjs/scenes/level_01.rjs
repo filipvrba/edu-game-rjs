@@ -1,14 +1,17 @@
 import 'TGrotto', '../objects/tiles/t_grotto'
 import 'Player', '../objects/player'
+import 'LevelAnimations', '../components/level_animations'
 
 import "*", as: "level_01_json", from: "../../../src/maps/level_01.json"
 
 export default class Level01 < Level
+
   def initialize
     super "maps/level_01.json"
     @sprite_ready_handler = lambda { |s| sprite_ready(s) }
 
     @scale = 2
+    @level_animations = LevelAnimations.new
   end
 
   def ready()
@@ -34,6 +37,8 @@ export default class Level01 < Level
     player = Player.new
     player.position = Vector2.new((@grotto.size.x * @scale) * 2.5, (@grotto.size.y * @scale) * 3)
     self.add player, "player"
+
+    self.add @level_animations, "level_animations"
 
     @tiles.update_global_position()
   end
