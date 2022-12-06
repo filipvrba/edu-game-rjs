@@ -1,0 +1,96 @@
+import 'TGrotto', '../objects/tiles/t_grotto'
+import 'SLevel', '../objects/sprites/s_level'
+
+export default class LevelTiles < Object2D
+  TILE_LAYER = "tilelayer"
+  LEVEL_DONE = "ltrd"
+
+  attr_reader :t_grotto
+
+  def initialize
+    super
+    @sprite_ready_handler = lambda { |s| sprite_ready(s) }
+  end
+
+  def ready()
+    @t_grotto = TGrotto.new
+    @t_grotto.connect Tile::SPRITE_READY, @sprite_ready_handler
+    self.add @t_grotto, 't_grotto'
+
+    @layers = self.parent.json.layers
+  end
+
+  def sprite_ready sprites
+    generate_tiles()
+    size = Vector2.new(window.innerWidth, window.innerHeight)
+    self.parent.resize(size)
+
+    self.emit_signal(LEVEL_DONE)
+  end
+
+  def generate_tiles()
+    
+    level_loop do |options|
+      id = options.layer.ld.data[options.dimension.i] + self.parent.json.compressionlevel
+
+      sprite = SLevel.new @t_grotto.get_s_sprite(id)
+      sprite.img = @t_grotto.img
+
+      s_id = "sprite_l#{options.layer.i}_i#{options.dimension.i}"
+      self.add(sprite, s_id)
+
+      sprite.position = Vector2.new(
+        options.dimension.vec.x * @t_grotto.size.x,
+        options.dimension.vec.y * @t_grotto.size.y
+      )
+      sprite.origin_position = sprite.position
+    end
+  end
+
+  def update_position(scale)
+    self.position = Vector2.new(
+      -(self.parent.dimension.w * scale * @t_grotto.size.w) / 2,
+      -(self.parent.dimension.h * scale * @t_grotto.size.h) / 2
+    )
+    self.update_global_position()
+  end
+
+  def update_scale scale
+    level_loop do |options|
+      s_id = "sprite_l#{options.layer.i}_i#{options.dimension.i}"
+      sprite = self.find_child(s_id)
+      sprite.scale = scale
+      sprite.position = Vector2.new(
+        options.dimension.vec.x * @t_grotto.size.x * scale,
+        options.dimension.vec.y * @t_grotto.size.y * scale
+      )
+    end
+
+    update_position(scale)
+  end
+
+  def level_loop(&callback)
+    @layers.forEach do |ld, il|
+      if ld.type == TILE_LAYER
+        Level.dimension_loop(self.parent.dimension) do |vec, i|
+          obj = {
+            layer: {
+              ld: ld,
+              i: il
+            },
+            dimension: {
+              vec: vec,
+              i: i
+            }
+          }
+          callback(obj)
+        end
+      end
+    end
+  end
+
+  def free()
+    @grotto.disconnect GrottoTile::SPRITE_READY, @sprite_ready_handler
+    super
+  end
+end

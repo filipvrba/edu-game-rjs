@@ -547,6 +547,8 @@ end
 class AnimationPlayer < BasicObject
   ANIM_FINISH = "apf"
 
+  attr_accessor :scale
+
   def animation
     return @animations[@current_animation]
   end
@@ -558,6 +560,7 @@ class AnimationPlayer < BasicObject
     @playback_active = false
     @current_animation = nil
     @time = 0
+    @scale = 1
   end
 
   def update dt
@@ -586,6 +589,7 @@ class AnimationPlayer < BasicObject
 
   def update_key dt, track, key
     value = (key.value - track.key_last.value) / (key.time - track.key_last.time) * dt
+    # console.log value
     value = value ? value : 0
     apply_str(track, "+= #{value}")
 
@@ -975,8 +979,9 @@ class Canvas2DElement < HTMLElement
   end
 
   def resize()
-    @renderer.set_size(window.innerWidth, window.innerHeight)
-    @scene_r.emit_signal RESIZE
+    size = Vector2.new(window.innerWidth, window.innerHeight)
+    @renderer.set_size(size.w, size.h)
+    @scene_r.emit_signal RESIZE, size
     @scene_r.update_world()
   end
 

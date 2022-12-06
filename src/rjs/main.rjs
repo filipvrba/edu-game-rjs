@@ -1,14 +1,23 @@
 import '../css/style.css'
+import '../css/dark_theme.css'
+
 import 'Images', './objects/images'
 import 'Level01', './scenes/level_01'
+import 'UI', './objects/ui'
+
+import 'TFxTeleport', './objects/tiles/t_fx_teleport'
 
 
 document.querySelector('#app').innerHTML = "<canvas-2d></canvas-2d>"
 canvas_2d = document.querySelector('canvas-2d')
 scene_r = canvas_2d.scene_r
-scene_r.connect "resize", lambda { update_scene_pos() }
+scene_r.connect "resize", lambda { |s| update_scene_pos(s) }
 
-def update_scene_pos()
+scene_r.add UI.new, 'ui'
+
+level_01 = Level01.new
+
+def update_scene_pos(size)
   scene_r.global_position = canvas_2d.win_center_position
 end
 update_scene_pos()
@@ -16,7 +25,7 @@ update_scene_pos()
 images = Images.new
 scene_r.add images, 'images'
 
-level_01 = Level01.new
+
 scene_r.add level_01, 'level_01'
 
 grid = Grid.new Vector2.new(16, 16)

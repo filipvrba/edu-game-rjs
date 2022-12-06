@@ -2,6 +2,7 @@
 
 export default class Images < BasicObject
   attr_reader :grotto_tile, :player_idle, :player_run, :player_ladder
+  attr_reader :fx_teleport
 
   def initialize
     super
@@ -17,6 +18,9 @@ export default class Images < BasicObject
 
     @player_ladder = Image.new
     @player_ladder.src = '/assets/grotto/player-ladder.png'
+
+    @fx_teleport = Image.new
+    @fx_teleport.src = '/assets/grotto/fx-teleport.png'
   end
 
   def draw r

@@ -1,0 +1,14 @@
+:root {
+  --dark-white: #181a1b;
+  --dark-font-color: #e8e6e3;
+}
+
+@media ( prefers-color-scheme: dark ) {
+  body {
+    background-color: var( --dark-white );
+  }
+
+  p {
+    color: var( --dark-font-color );
+  }
+}

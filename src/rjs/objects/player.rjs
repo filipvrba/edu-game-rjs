@@ -17,15 +17,26 @@ export default class Player < KinematicBody
   end
 
   def ready()
+    # @t_fx_teleport = TFxTeleport.new
+    # self.add @t_fx_teleport, 't_fx_teleport'
+
+    # @fx_sprite = Sprite.new
+    # @fx_sprite.scale = 10
+    # @fx_sprite.centered = true
+    # @fx_sprite.visible_edge = true
+
+    # @fx_animation_sprite = AnimationSprite.new @fx_sprite
+    # self.add @fx_animation_sprite, "fx_animation_sprite"
+    # @fx_animation_sprite.add_tile @t_fx_teleport
+    # @fx_animation_sprite.play_tile @t_fx_teleport.id
+
     self.add @player_animations, 'player_animations'
     self.add @sprite, 'player_sprite'
   end
 
-  def physics_update dt
-    # if self.position.y < (32 * 8) + (32 * 3)
-    #   self.position.y += 50 * dt
-    # end
-
-    super
+  def update_scale scale
+    @scale = scale
+    @sprite.scale = scale
+    @sprite.offset.y = (-@player_animations.animation_sprite.current_tile.size.h * scale) / 2
   end
 end

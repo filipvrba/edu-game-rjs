@@ -20,15 +20,12 @@ export default class PlayerAnimations < Object2D
     self.parent.add @t_player_ladder, "t_player_ladder"
     
     @animation_sprite = AnimationSprite.new self.parent.sprite
-    @animation_sprite.scale = self.parent.scale
     self.parent.add @animation_sprite, "animation_sprite"
     @animation_sprite.add_tile @t_player_idle
     @animation_sprite.add_tile @t_player_run
     @animation_sprite.add_tile @t_player_ladder
 
     @animation_sprite.play_tile @t_player_idle.id
-
-    self.parent.sprite.offset.y = -@animation_sprite.current_tile.size.h
   end
 
   def update dt
