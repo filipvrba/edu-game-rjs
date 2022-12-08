@@ -1,4 +1,5 @@
 import 'MRuby', '../third-side/mruby'
+import 'BoardTask', './ui_board/board_task'
 
 export default class UIBoard < BasicObject
   CLICK = 'click'
@@ -7,6 +8,8 @@ export default class UIBoard < BasicObject
   def is_mrb_code_empty
     @mrb_code.value.length <= 0
   end
+
+  attr_reader :board_task, :task
 
   def initialize
     super
@@ -18,14 +21,19 @@ export default class UIBoard < BasicObject
     @mrb_code = document.getElementById('board-mrb-code')
     @mrb_result = document.getElementById('board-mrb-result')
     @button_ok = document.getElementById('board-button-ok')
+
+    @is_button_ok_access = false
+    @board_task = BoardTask.new
   end
 
   def ready()
     @button_ok.addEventListener(CLICK, @button_ok_click_handler)
     @mrb_code.addEventListener(CHANGE, @mrb_code_change_handler)
 
-    visible(true)
+    self.add @board_task, "board_task"
+
     mrb_code_change()
+    reset()
   end
 
   def visible boollean
@@ -43,9 +51,15 @@ export default class UIBoard < BasicObject
       return
     end
 
-    @mrb_result.value = ""
-    MRuby.get_result(@mrb_code.value) do |result|
-      @mrb_result.value = result
+    unless @is_button_ok_access
+      @mrb_result.value = "Processing of the code is ongoing..."
+      MRuby.get_result(@mrb_code.value) do |result|
+        @mrb_result.value = result
+        button_ok_access(result)
+      end
+    else
+      reset()
+      @board_task.callback_done()
     end
   end
 
@@ -55,6 +69,22 @@ export default class UIBoard < BasicObject
     else
       @button_ok.disabled = false
     end
+  end
+
+  def button_ok_access(result)
+    if @board_task.s_task and @board_task.s_task.result == result
+      @is_button_ok_access = true
+      @button_ok.className = 'green'
+    else
+      @is_button_ok_access = false
+      @button_ok.className = 'blue'
+    end
+  end
+
+  def reset()
+    @mrb_code.value = ""
+    @mrb_result.value = ""
+    button_ok_access(nil)
   end
 
   def free()

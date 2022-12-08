@@ -42,8 +42,7 @@ export default class LevelAnimations < AnimationPlayer
 
     t_player_y = animation.add_track('player.position.y')
     t_player_y.add_insert_key(0, root_point.y + (grotto.size.h * tile.scale) * 3)
-    t_player_y.add_insert_key(1, root_point.y + (grotto.size.h * tile.scale) * 3)
-    t_player_y.add_insert_key(5, root_point.y + (grotto.size.h * tile.scale) * 11)
+    t_player_y.add_insert_key(4, root_point.y + (grotto.size.h * tile.scale) * 11)
     self.add_animation(Scenes::MOVE_D_L, animation)
 
     animation = SAnimation.new

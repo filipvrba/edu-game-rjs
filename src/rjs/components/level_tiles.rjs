@@ -4,16 +4,18 @@ import 'SLevel', '../objects/sprites/s_level'
 export default class LevelTiles < Object2D
   TILE_LAYER = "tilelayer"
   LEVEL_DONE = "ltrd"
+  SPRITE_GEN = "ltsg"
 
   attr_reader :t_grotto
 
   def initialize
     super
     @sprite_ready_handler = lambda { |s| sprite_ready(s) }
+
+    @t_grotto = TGrotto.new
   end
 
   def ready()
-    @t_grotto = TGrotto.new
     @t_grotto.connect Tile::SPRITE_READY, @sprite_ready_handler
     self.add @t_grotto, 't_grotto'
 
@@ -44,6 +46,7 @@ export default class LevelTiles < Object2D
         options.dimension.vec.y * @t_grotto.size.y
       )
       sprite.origin_position = sprite.position
+      self.emit_signal(SPRITE_GEN, s_id, sprite.position)
     end
   end
 

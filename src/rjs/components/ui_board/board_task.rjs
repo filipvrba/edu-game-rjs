@@ -1,0 +1,26 @@
+import 'STask', '../../structs/s_task'
+
+export default class BoardTask < BasicObject
+  attr_reader :s_task, :callback_done
+
+  def initialize
+    super
+
+    @s_task = nil
+    @callback_done = nil
+  end
+
+  def start task, result, &callback
+    @s_task = STask.new task, result
+    self.parent.task.innerHTML = task
+    self.parent.reset()
+    self.parent.visible(true)
+    @callback_done = callback
+  end
+
+  def done()
+    @callback_done.call()
+    @s_task = nil
+    @callback_done = nil
+  end
+end

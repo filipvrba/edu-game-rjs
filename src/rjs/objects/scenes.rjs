@@ -7,12 +7,20 @@ export default class Scenes < BasicObject
   MOVE_D_L = "move_down_ladder"
   MOVE_TO_B = "move_to_bridge"
 
+  def level_01
+    self.get_scene(true).find_child('level_01')
+  end
+
   def anims
-    self.get_scene(true).find_child('level_01').find_child('level_animations')
+    level_01.find_child('level_animations')
   end
 
   def ui
     self.get_scene(true).find_child('ui')
+  end
+
+  def ladder
+    level_01.find_child('ladder')
   end
 
   attr_reader :scenes, :current_scene
@@ -52,9 +60,35 @@ export default class Scenes < BasicObject
     add_scene MOVE_TO_L, "Zkusím se do něj hacknout a opravit chybu."
     add_scene MOVE_TO_L, "Tak do toho..."
     add_scene(MOVE_TO_L, nil, lambda do
-      ui.active_click = false
       ui.ui_board.visible(true)
+      ui.ui_board.board_task.start("Zadej neco!", "Filip") do
+        ui.ui_board.visible(false)
+        next_scene(MOVE_D_L, -1)
+      end
     end)
+
+    add_scene(MOVE_D_L, "A je to, konečně mohu jít dolů", lambda do
+      ui.active_click = false
+      ladder.unlock() do
+        ui.active_click = true
+      end
+    end)
+    add_scene(MOVE_D_L, nil, lambda do
+      ui.active_click = false
+      anims.play(MOVE_D_L) do
+        ui.active_click = true
+      end
+    end)
+    add_scene MOVE_D_L, "Tak jsem dole, pujdu k tomu mostu."
+    add_scene(MOVE_D_L, nil, lambda do
+      ui.active_click = false
+      anims.play(MOVE_TO_B) do
+        ui.active_click = true
+        next_scene(MOVE_TO_B, -1)
+      end
+    end)
+
+    add_scene MOVE_TO_B, "Jsem u mostu a vidím, že není otevřený."
   end
 
   def add_scene(id, message, event = nil)

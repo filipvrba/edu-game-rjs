@@ -1,0 +1,8 @@
+export default class STask
+  attr_accessor :taks, :result
+
+  def initialize task, result
+    @task   = task
+    @result = result
+  end
+end
