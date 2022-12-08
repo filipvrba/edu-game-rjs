@@ -1,0 +1,65 @@
+import 'MRuby', '../third-side/mruby'
+
+export default class UIBoard < BasicObject
+  CLICK = 'click'
+  CHANGE = 'input'
+
+  def is_mrb_code_empty
+    @mrb_code.value.length <= 0
+  end
+
+  def initialize
+    super
+    @button_ok_click_handler = lambda { button_ok_click() }
+    @mrb_code_change_handler = lambda { mrb_code_change() }
+
+    @board = document.getElementById('board')
+    @task = document.getElementById('board-task')
+    @mrb_code = document.getElementById('board-mrb-code')
+    @mrb_result = document.getElementById('board-mrb-result')
+    @button_ok = document.getElementById('board-button-ok')
+  end
+
+  def ready()
+    @button_ok.addEventListener(CLICK, @button_ok_click_handler)
+    @mrb_code.addEventListener(CHANGE, @mrb_code_change_handler)
+
+    visible(true)
+    mrb_code_change()
+  end
+
+  def visible boollean
+    if boollean
+      @board.style.visibility = 'visible'
+    else
+      @board.style.visibility = 'hidden'
+    end
+
+    self.parent.active_click = !boollean
+  end
+
+  def button_ok_click()
+    if is_mrb_code_empty
+      return
+    end
+
+    @mrb_result.value = ""
+    MRuby.get_result(@mrb_code.value) do |result|
+      @mrb_result.value = result
+    end
+  end
+
+  def mrb_code_change()
+    if is_mrb_code_empty
+      @button_ok.disabled = true
+    else
+      @button_ok.disabled = false
+    end
+  end
+
+  def free()
+    @button_ok.removeEventListener(CLICK, @button_ok_click_handler)
+    @mrb_code.removeEventListener(CHANGE, @mrb_code_change_handler)
+    super
+  end
+end 

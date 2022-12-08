@@ -1,29 +1,28 @@
 import 'Scenes', './scenes'
+import 'UIBoard', '../components/ui_board'
 
 export default class UI < BasicObject
   CLICK = 'click'
 
   attr_accessor :active_click
-  attr_reader :panel, :board
+  attr_reader :panel, :ui_board
 
 
   def initialize
     super
     @click_handler = lambda { |e| click() }
-
     @panel = document.getElementById('panel')
-    @board = document.getElementById('board')
 
     document.addEventListener(CLICK, @click_handler)
     write_message(nil)
-    # board_visible(false)
 
-    @active_click = false
+    @active_click = true
+    @ui_board = UIBoard.new
   end
 
   def ready()
+    self.add(@ui_board, 'ui_board')
     @scenes = self.get_scene(true).find_child('scenes')
-    # @scenes.play_scene(Scenes::IDLE_C, 0)
     @scenes.next_scene(Scenes::IDLE_C, -1)
   end
 
@@ -51,14 +50,6 @@ export default class UI < BasicObject
       @panel.innerHTML = "<p>#{str}</p>"
     else
       @panel.style.visibility = 'hidden'
-    end
-  end
-
-  def board_visible boollean
-    if boollean
-      @board.style.visibility = 'visible'
-    else
-      @board.style.visibility = 'hidden'
     end
   end
 end

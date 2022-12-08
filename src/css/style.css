@@ -61,3 +61,7 @@ button {
 .blue {
   background-color: #008CBA;
 }
+
+.blue[disabled] {
+  background: grey;
+}

@@ -53,7 +53,7 @@ export default class Scenes < BasicObject
     add_scene MOVE_TO_L, "Tak do toho..."
     add_scene(MOVE_TO_L, nil, lambda do
       ui.active_click = false
-      ui.board_visible(true)
+      ui.ui_board.visible(true)
     end)
   end
 
