@@ -1,3 +1,5 @@
+import 'Scenes', '../objects/scenes'
+
 export default class LevelAnimations < AnimationPlayer
   def player
     self.parent.find_child("player")
@@ -22,17 +24,17 @@ export default class LevelAnimations < AnimationPlayer
 
     t_player_y = animation.add_track('player.position.y')
     t_player_y.add_insert_key(0, root_point.y + (grotto.size.h * tile.scale) * 3)
-    self.add_animation("idle_corner", animation)
+    self.add_animation(Scenes::IDLE_C, animation)
 
     animation = SAnimation.new
     t_player_x = animation.add_track('player.position.x')
     t_player_x.add_insert_key(0, root_point.x + (grotto.size.w * tile.scale))
-    t_player_x.add_insert_key(1, root_point.x + (grotto.size.w * tile.scale))
-    t_player_x.add_insert_key(2, root_point.x + (grotto.size.w * tile.scale) * 2.5)
+    # t_player_x.add_insert_key(1, root_point.x + (grotto.size.w * tile.scale))
+    t_player_x.add_insert_key(1, root_point.x + (grotto.size.w * tile.scale) * 2.5)
 
     t_player_y = animation.add_track('player.position.y')
     t_player_y.add_insert_key(0, root_point.y + (grotto.size.h * tile.scale) * 3)
-    self.add_animation("move_to_ladder", animation)
+    self.add_animation(Scenes::MOVE_TO_L, animation)
     
     animation = SAnimation.new
     t_player_x = animation.add_track('player.position.x')
@@ -42,7 +44,7 @@ export default class LevelAnimations < AnimationPlayer
     t_player_y.add_insert_key(0, root_point.y + (grotto.size.h * tile.scale) * 3)
     t_player_y.add_insert_key(1, root_point.y + (grotto.size.h * tile.scale) * 3)
     t_player_y.add_insert_key(5, root_point.y + (grotto.size.h * tile.scale) * 11)
-    self.add_animation("move_down_ladder", animation)
+    self.add_animation(Scenes::MOVE_D_L, animation)
 
     animation = SAnimation.new
     t_player_x = animation.add_track('player.position.x')
@@ -52,8 +54,8 @@ export default class LevelAnimations < AnimationPlayer
 
     t_player_y = animation.add_track('player.position.y')
     t_player_y.add_insert_key(0, root_point.y + (grotto.size.h * tile.scale) * 11)
-    self.add_animation("move_to_bridge", animation)
+    self.add_animation(Scenes::MOVE_TO_B, animation)
 
-    self.play("idle_corner")
+    self.play(Scenes::IDLE_C)
   end
 end

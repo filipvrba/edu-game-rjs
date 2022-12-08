@@ -18,9 +18,6 @@ export default class Images < BasicObject
 
     @player_ladder = Image.new
     @player_ladder.src = '/assets/grotto/player-ladder.png'
-
-    @fx_teleport = Image.new
-    @fx_teleport.src = '/assets/grotto/fx-teleport.png'
   end
 
   def draw r

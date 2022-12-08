@@ -6,10 +6,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
   </head>
-  <body>
-    <div id="panel" class="ui panel">
-      <p>lol</p>
+  <body> 
+    <div id="ui">
+      <div class="row mb-3">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+          <div class="pb">
+            <div id="panel" class="ui panel">
+              <p>lol</p>
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div id="board" class="board">
+              <!-- 1. Container -->
+              <div class="row mt-3">
+                <h1>Zadání</h1>
+                <p class="text-break"></p>
+              </div>
+
+              <div class="mb-3">
+                <hr style="width: 60%">
+              </div>
+
+              <!-- 2. Container -->
+              <div class="row mb-3">
+                <div class="col-md-7">
+                  <div class="row mt-0">
+                    <h3 class="text-center">MRB Code</h3>
+                  </div>
+                  <div>
+                    <textarea id="mrb-code" rows="13"></textarea>
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <div class="row mt-0">
+                    <h3 class="text-center">Result</h3>
+                  </div>
+                  <div>
+                    <textarea readonly id="mrb-result" rows="13"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <hr style="width: 60%">
+              </div>
+
+              <!-- 3. Container -->
+              <div class="row mb-3">
+                <div class="container text-center">
+                  <button class="blue">OK</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2"></div>
+      </div>
     </div>
+
     <div id="app"></div>
     
     <script src="/src/.js/engine2d_22a1206.js"></script>

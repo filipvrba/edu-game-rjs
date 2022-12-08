@@ -1,21 +1,63 @@
-/* * {
-  position: fixed;
-  top: 0;
-  left: 0;
-  outline: none;
-} */
+:root {
 
-.ui.panel {
-  z-index: 1;
+  --box-shadow: 0 1px 3px rgba( 0, 0, 0, 0.12 ), 0 1px 2px rgba( 0, 0, 0, 0.24 );
+  --norm-radius: 10px;
+  --board-pad-top: 30px;
+}
+
+.panel {
 
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin: 0 10%;
+  margin: 0 1em;
 
-  background-color: rgba(64, 64, 64, 0.8);
+  background-color: rgba(64, 64, 64, 0.3);
 
   border-style: solid;
   border-radius: 30px;
-  border-color: rgba(41, 41, 41, 0.8);
+  border-color: rgba(41, 41, 41, 0.3);
+}
+
+.board {
+
+  display: flex;
+  flex-direction: column;
+
+  background-color: #fff;
+  border-radius: var( --norm-radius );
+  box-shadow: var( --box-shadow ); 
+}
+
+textarea {
+  resize: none;
+  height: 100%;
+  width: 100%;
+  
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: var( --norm-radius );
+  font-size: 14pt;
+}
+
+button {
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  width: 50%;
+  border-radius: var( --norm-radius );
+}
+
+.green {
+  background-color: #4CAF50;
+}
+
+.blue {
+  background-color: #008CBA;
 }

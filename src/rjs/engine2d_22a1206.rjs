@@ -260,6 +260,14 @@ class SAnimation
     end
     return result
   end
+
+  def reset()
+    @tracks.forEach do |track|
+      track.keys.forEach do |key|
+        key.is_done = false
+      end
+    end
+  end
 end
 class SKey
   attr_accessor :is_done
@@ -287,7 +295,6 @@ class STrack
   def initialize track = nil
     @track = track
     @keys = []
-    @key_last = nil
   end
 
   def add_insert_key time, key
@@ -561,6 +568,7 @@ class AnimationPlayer < BasicObject
     @current_animation = nil
     @time = 0
     @scale = 1
+    @play_callback = nil
   end
 
   def update dt
@@ -582,14 +590,15 @@ class AnimationPlayer < BasicObject
         end
       end
     else
-      stop()
+      animation.reset()
       self.emit_signal(ANIM_FINISH, @current_animation)
+      @play_callback.call() if @play_callback
+      stop()
     end
   end
 
   def update_key dt, track, key
     value = (key.value - track.key_last.value) / (key.time - track.key_last.time) * dt
-    # console.log value
     value = value ? value : 0
     apply_str(track, "+= #{value}")
 
@@ -608,12 +617,15 @@ class AnimationPlayer < BasicObject
     @animations[name] = animation
   end
 
-  def play name
+  def play name, &callback
+    stop()
     @current_animation = name
     @playback_active = true
+    @play_callback = callback
   end
 
   def stop()
+    @play_callback = nil
     @current_animation = nil
     @playback_active = false
     @time = 0

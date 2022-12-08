@@ -1,14 +1,30 @@
 :root {
   --dark-white: #181a1b;
+  --dark-white-body: #131516;
   --dark-font-color: #e8e6e3;
+  --dark-white-box: #2b2a33;
 }
 
 @media ( prefers-color-scheme: dark ) {
   body {
+    background-color: var( --dark-white-body );
+  }
+
+  p, h1, h2, h3, li {
+    color: var( --dark-font-color );
+  }
+
+  .board {
     background-color: var( --dark-white );
   }
 
-  p {
-    color: var( --dark-font-color );
+  .panel {
+    border-color: #3a3835
+  }
+
+  textarea {
+    background-color: var(--dark-white-box);
+    border-color: #75747a;
+    color: white;
   }
 }

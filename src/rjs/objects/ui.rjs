@@ -1,45 +1,30 @@
+import 'Scenes', './scenes'
+
 export default class UI < BasicObject
   CLICK = 'click'
+
+  attr_accessor :active_click
+  attr_reader :panel, :board
+
 
   def initialize
     super
     @click_handler = lambda { |e| click() }
 
     @panel = document.getElementById('panel')
+    @board = document.getElementById('board')
+
     document.addEventListener(CLICK, @click_handler)
     write_message(nil)
-    @is_click_active = false
-    # @current_scene = 0
-    # @scene = [
-    #   {
-    #     message: "Kde to jsem?",
-    #     event: nil
-    #   },
-    #   {
-    #     message: "Musím se z téhle jeskyně dostat.",
-    #     event: nil
-    #   },
-    #   {
-    #     message: "Pujdu nejdříve po žebříku, ale vidím, že není puštěný až dole.",
-    #     event: nil
-    #   },
-    #   {
-    #     message: "Zde je řídící panel, zkusím se na něj kouknout.",
-    #     event: nil
-    #   },
-    #   {
-    #     message: "Aha, je rozbítý, zkusím ho hacknout. Tak se na to koukněme...",
-    #     event: nil
-    #   },
-    #   {
-    #     message: nil,
-    #     event: lambda { console.log("[E] Zapne se další ui.") }
-    #   }
-    # ]
+    # board_visible(false)
+
+    @active_click = false
   end
 
   def ready()
-    
+    @scenes = self.get_scene(true).find_child('scenes')
+    # @scenes.play_scene(Scenes::IDLE_C, 0)
+    @scenes.next_scene(Scenes::IDLE_C, -1)
   end
 
   def free()
@@ -48,18 +33,16 @@ export default class UI < BasicObject
   end
 
   def click()
-    unless @is_click_active
+    unless @active_click
       return
     end
 
-    # options = @scene[@current_scene]
-    # @current_scene = (@current_scene + 1) % @scene.length
+    scene = @scenes.next_scene(@scenes.current_scene.id)
+    write_message(scene.message)
 
-    # write_message(options.message)
-
-    # if options.event
-    #   options.event()
-    # end
+    if scene.event
+      scene.event()
+    end
   end
 
   def write_message str
@@ -68,6 +51,14 @@ export default class UI < BasicObject
       @panel.innerHTML = "<p>#{str}</p>"
     else
       @panel.style.visibility = 'hidden'
+    end
+  end
+
+  def board_visible boollean
+    if boollean
+      @board.style.visibility = 'visible'
+    else
+      @board.style.visibility = 'hidden'
     end
   end
 end

@@ -1,0 +1,80 @@
+import 'SScene', '../structs/s_scene'
+import 'LevelAnimations', '../components/level_animations'
+
+export default class Scenes < BasicObject
+  IDLE_C = "idle_corner"
+  MOVE_TO_L = "move_to_ladder"
+  MOVE_D_L = "move_down_ladder"
+  MOVE_TO_B = "move_to_bridge"
+
+  def anims
+    self.get_scene(true).find_child('level_01').find_child('level_animations')
+  end
+
+  def ui
+    self.get_scene(true).find_child('ui')
+  end
+
+  attr_reader :scenes, :current_scene
+
+  def initialize
+    super
+
+    @scenes = {}
+    @current_scene = {
+      id: nil,
+      i: -1
+    }
+  end
+
+  def ready
+    add_scene(IDLE_C, "Kde to jsem? Myslím si, že jsem zabloudil a potřebuji pomoct.", lambda do
+      anims.play(IDLE_C)
+    end)
+    add_scene IDLE_C, "Potřebuji se z této jeskyně dostat ven."
+    add_scene IDLE_C, "Vidím, že na konci jeskyně jsou dvěře a snad mě dostanou pryč."
+    add_scene IDLE_C, "Jasně, to je můj cíl. Dostat se k těm dvěřím."
+    add_scene IDLE_C, "Dobrá, tak jdem..."
+    add_scene(IDLE_C, nil, lambda do
+      ui.active_click = false
+      anims.play(MOVE_TO_L) do
+        next_scene(MOVE_TO_L, -1)
+        ui.active_click = true
+      end
+    end)
+
+    add_scene MOVE_TO_L, "Je tady žebřík a tak ho zkusím strčit aby, se více posunul dolů."
+    add_scene MOVE_TO_L, "A jeee, máme tu problém!"
+    add_scene MOVE_TO_L, "Žebřík nejde dát více dolů, kouknu se co píše terminál."
+    add_scene MOVE_TO_L, "Terminál vůbec nereáguje. Podívám se na něj více."
+    add_scene MOVE_TO_L, "Vždy v nouzovývh případech u sebe si nosím nářadí."
+    add_scene MOVE_TO_L, "Vidím, že vše je v pořádku, spíše bude chyba v softwéru."
+    add_scene MOVE_TO_L, "Zkusím se do něj hacknout a opravit chybu."
+    add_scene MOVE_TO_L, "Tak do toho..."
+    add_scene(MOVE_TO_L, nil, lambda do
+      ui.active_click = false
+      ui.board_visible(true)
+    end)
+  end
+
+  def add_scene(id, message, event = nil)
+    unless scenes[id]
+      @scenes[id] = []
+    end
+
+    @scenes[id] << SScene.new(message, event)
+  end
+
+  def next_scene id, i = nil
+    unless i
+      i = 0
+      if @current_scene.id == id
+        i = (@current_scene.i + 1) % @scenes[id].length
+      end
+    end
+
+    @current_scene.id = id
+    @current_scene.i = i
+    return @scenes[@current_scene.id][@current_scene.i]
+  end
+end
