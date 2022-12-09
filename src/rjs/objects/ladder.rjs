@@ -1,85 +1,19 @@
-import "LevelTiles", '../components/level_tiles'
+import 'DynamicObj', './dynamic_obj'
 
-export default class Ladder < Object2D
+export default class Ladder < DynamicObj
   SPRITE_ID = 159
 
-  def level_tile
-    self.get_scene().level_tiles
-  end
-
-  def t_grotto
-    level_tile.t_grotto
-  end
-
   def initialize
-    super
-    @positions_end = []
-    @is_unlock = false
-    @callback_done = nil
+    super SPRITE_ID, "sprite_l0_i130", 6
   end
 
-  def ready()
-    update_position()
-    self.update_global_position()
-
-    (0...6).step(1) do |i|
-      sprite = Sprite.new t_grotto.get_s_sprite(SPRITE_ID)
-      sprite.img = t_grotto.img
-      sprite.centered = false
-
-      self.add sprite, "sprite_#{i}"
-      sprite.position = level_tile.find_child("sprite_l0_i130").position
-      @positions_end << get_position_end(i, sprite)
+  def physics_update_position(dt, sprite, position_end)
+    if sprite.position.y < position_end.y
+      sprite.position.y += 50 * self.scale * dt
     end
   end
 
-  def physics_update dt
-    unless @is_unlock
-      return
-    end
-
-    (0...self.children.length).step(1) do |i| child = self.children[i]
-      if child.id.indexOf("sprite_") > -1
-        index = Number child.id.replace("sprite_", "")
-        if child.position.y < @positions_end[index].y
-          self.children[i].position.y += 50 * @scale * dt
-        end
-        
-        if child.id == "sprite_5"
-          if child.position.y >= @positions_end[index].y
-            @is_unlock = false
-            @callback_done.call()
-          end
-        end
-      end
-    end
-  end
-
-  def unlock(&callback)
-    @is_unlock = true
-    @callback_done = callback
-  end
-
-  def update_position()
-    self.position = level_tile.position
-  end
-
-  def get_position_end i, sprite
-    return t_grotto.size.clone.multiply_scalar(sprite.scale * (i + 1)).add(sprite.position).clone
-  end
-
-  def update_scale scale
-    @scale = scale
-    update_position()
-    @positions_end = []
-
-    self.children.forEach do |child|
-      if child.id.indexOf('sprite_') > -1
-        child.scale = scale
-        child.position = level_tile.find_child("sprite_l0_i130").position.clone
-        index = Number child.id.replace("sprite_", "")
-        @positions_end << get_position_end(index, child)
-      end
-    end
+  def is_done(sprite, position_end)
+    return sprite.position.y >= position_end.y
   end
 end

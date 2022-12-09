@@ -1,0 +1,89 @@
+import "LevelTiles", '../components/level_tiles'
+
+export default class DynamicObj < Object2D
+  SPRITE_NAME = "sprite"
+  PHY_UPDATE_POS = "dopup"
+
+  def level_tile
+    self.get_scene().level_tiles
+  end
+
+  def t_grotto
+    level_tile.t_grotto
+  end
+
+  def initialize s_id, ls_id, length
+    super
+
+    @s_id = s_id
+    @ls_id = ls_id
+    @length = length
+    @positions_end = []
+    @is_unlock = false
+    @callback_done = nil
+  end
+
+  def ready()
+    update_position()
+    self.update_global_position()
+
+    generate_obj(@s_id, @ls_id, @length)
+  end
+
+  def physics_update dt
+    unless @is_unlock
+      return
+    end
+
+    (0...@length).step(1) do |i|
+      child = self.find_child("#{SPRITE_NAME}_#{i}")
+      # self.emit_signal(PHY_UPDATE_POS, child, @positions_end[i])
+      self.physics_update_position(dt, child, @positions_end[i])
+
+      if child.id == "#{SPRITE_NAME}_#{@length - 1}"
+        if self.is_done(child, @positions_end[i])
+          @is_unlock = false
+          @callback_done.call()
+        end
+      end
+    end
+  end
+
+  def generate_obj(s_id, ls_id, length)
+    (0...length).step(1) do |i|
+      sprite = Sprite.new t_grotto.get_s_sprite(s_id)
+      sprite.img = t_grotto.img
+
+      self.add sprite, "#{SPRITE_NAME}_#{i}"
+      sprite.position = level_tile.find_child(ls_id).position
+      @positions_end << get_position_end(i, sprite)
+    end
+  end
+
+  def update_position()
+    self.position = level_tile.position
+  end
+
+  def update_scale scale
+    @scale = scale
+    update_position()
+    @positions_end = []
+
+    (0...@length).step(1) do |i|
+      child = self.find_child("#{SPRITE_NAME}_#{i}")
+      child.scale = @scale
+      child.position = level_tile.find_child(@ls_id).position.clone
+      @positions_end << get_position_end(i, child)
+    end
+  end
+
+  def get_position_end i, sprite
+    return t_grotto.size.clone.multiply_scalar(sprite.scale * (i + 1))
+      .add(sprite.position).clone
+  end
+
+  def unlock(&callback)
+    @is_unlock = true
+    @callback_done = callback
+  end
+end

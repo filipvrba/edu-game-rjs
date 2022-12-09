@@ -3,6 +3,7 @@ import 'Player', '../objects/player'
 import 'LevelAnimations', '../components/level_animations'
 import 'LevelTiles', '../components/level_tiles'
 import 'Ladder', '../objects/ladder'
+import 'Bridge', '../objects/bridge'
 
 import "*", as: "level_01_json", from: "../../../src/maps/level_01.json"
 
@@ -43,6 +44,9 @@ export default class Level01 < Level
     @ladder = Ladder.new
     self.add @ladder, 'ladder'
 
+    @bridge = Bridge.new
+    self.add @bridge, 'bridge'
+
     @player = Player.new
     self.add @player, "player"
     self.add @level_animations, "level_animations"
@@ -63,6 +67,10 @@ export default class Level01 < Level
 
     if @ladder
       @ladder.update_scale _scale
+    end
+
+    if @bridge
+      @bridge.update_scale _scale
     end
   end
     

@@ -16,7 +16,7 @@ export default class UI < BasicObject
     document.addEventListener(CLICK, @click_handler)
     write_message(nil)
 
-    @active_click = true
+    @active_click = false
     @ui_board = UIBoard.new
   end
 
