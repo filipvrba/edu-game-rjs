@@ -6,6 +6,8 @@ export default class Scenes < BasicObject
   MOVE_TO_L = "move_to_ladder"
   MOVE_D_L = "move_down_ladder"
   MOVE_TO_B = "move_to_bridge"
+  MOVE_TO_D = "move_to_door"
+  IDLE_D = "idle_door"
 
   def level_01
     self.get_scene(true).find_child('level_01')
@@ -21,6 +23,10 @@ export default class Scenes < BasicObject
 
   def ladder
     level_01.find_child('ladder')
+  end
+
+  def bridge
+    level_01.find_child('bridge')
   end
 
   attr_reader :scenes, :current_scene
@@ -79,7 +85,7 @@ export default class Scenes < BasicObject
         ui.active_click = true
       end
     end)
-    add_scene MOVE_D_L, "Tak jsem dole, pujdu k tomu mostu."
+    add_scene MOVE_D_L, "Tak jsem dole, pujdu k tomu mostu a uvidím co budou za další potíže."
     add_scene(MOVE_D_L, nil, lambda do
       ui.active_click = false
       anims.play(MOVE_TO_B) do
@@ -89,6 +95,35 @@ export default class Scenes < BasicObject
     end)
 
     add_scene MOVE_TO_B, "Jsem u mostu a vidím, že není otevřený."
+    add_scene MOVE_TO_B, "Je tu terminál a vypisuje chyby."
+    add_scene MOVE_TO_B, "Píše, že vzdálenost mostu neni definována."
+    add_scene MOVE_TO_B, "V této jaskyni je snad vše rozbité."
+    add_scene MOVE_TO_B, "Ale co už, jsem tu já a vše zde opravím."
+    add_scene MOVE_TO_B, "Tak se na to tedy kouknem..."
+    add_scene(MOVE_TO_B, nil, lambda do
+      ui.ui_board.visible(true)
+      ui.ui_board.board_task.start("Zadej neco!", "Filip") do
+        ui.ui_board.visible(false)
+        next_scene(MOVE_TO_D, -1)
+      end
+    end)
+
+    add_scene(MOVE_TO_D, "Skvělé, most se dokázal otevřít.", lambda do
+      ui.active_click = false
+      bridge.unlock() do
+        ui.active_click = true
+      end
+    end)
+    add_scene MOVE_TO_D, "Teď mohu konečně odejít těmi dvěřmi."
+    add_scene(MOVE_TO_D, nil, lambda do
+      ui.active_click = false
+      anims.play(MOVE_TO_D) do
+        ui.active_click = true
+        next_scene(IDLE_D, -1)
+      end
+    end)
+
+    add_scene IDLE_D, "Tak jsem zde a teď s téhle jeskyně pujdu konečně pryč!"
   end
 
   def add_scene(id, message, event = nil)
