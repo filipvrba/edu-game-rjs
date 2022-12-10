@@ -38,7 +38,15 @@ textarea {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   border-radius: var( --norm-radius );
-  font-size: 14pt;
+  font-size: 11pt;
+}
+
+.textarea-code {
+  font-size: 13pt;
+
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: scroll;
 }
 
 button {

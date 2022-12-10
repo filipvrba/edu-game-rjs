@@ -9,7 +9,7 @@ export default class UIBoard < BasicObject
     @mrb_code.value.length <= 0
   end
 
-  attr_reader :board_task, :task
+  attr_reader :board_task, :task, :mrb_code
 
   def initialize
     super
@@ -31,9 +31,6 @@ export default class UIBoard < BasicObject
     @mrb_code.addEventListener(CHANGE, @mrb_code_change_handler)
 
     self.add @board_task, "board_task"
-
-    mrb_code_change()
-    reset()
   end
 
   def visible boollean
@@ -53,9 +50,24 @@ export default class UIBoard < BasicObject
 
     unless @is_button_ok_access
       @mrb_result.value = "Processing of the code is ongoing..."
-      MRuby.get_result(@mrb_code.value) do |result|
-        @mrb_result.value = result
-        button_ok_access(result)
+      code = @board_task.s_task.code_evaluation(@mrb_code.value)
+
+      MRuby.get_result(code) do |r|
+        unless r == "true" or r == "false"
+          results = r.split(';')
+          result_a = results[0]
+          result_b = results[1]
+          result_equals = result_a == result_b
+          result_code = result_equals ? 200 : 202
+
+          button_ok_access(result_a, result_b)
+
+          @mrb_result.value = "|#{result_code}|\n\n" +
+            "result: '#{result_a}'\n" +
+            "expected_result: '#{result_b}'\nequals: #{result_equals}"
+        else
+          @mrb_result.value = "|400|\n\nAs the code was being processed, an unexpected error happened."
+        end
       end
     else
       reset()
@@ -71,8 +83,8 @@ export default class UIBoard < BasicObject
     end
   end
 
-  def button_ok_access(result)
-    if @board_task.s_task and @board_task.s_task.result == result
+  def button_ok_access(result_a, result_b)
+    if @board_task.s_task and (result_a and result_b) and result_a == result_b
       @is_button_ok_access = true
       @button_ok.className = 'green'
     else
@@ -84,7 +96,7 @@ export default class UIBoard < BasicObject
   def reset()
     @mrb_code.value = ""
     @mrb_result.value = ""
-    button_ok_access(nil)
+    button_ok_access(nil, nil)
   end
 
   def free()

@@ -1,0 +1,66 @@
+import 'STask', '../s_task'
+import 'Helper', '../../helper'
+
+export default class STaskA < STask
+  def initialize
+  info = '''
+      <p>
+        Terminál hlásí, že žebř nemá definovanou brzdnou dráhu.
+        To je hlavní problém, co musím vyřešit. Je potřeba aby se mi
+        žebř posunul více dolů a já mohl po něm bezpečně sejít.
+      </p>
+      
+      <h2>Oprava Vektoru</h2
+
+      <p>
+        Koukám do nástroje a vidím, že jeden proces se neustále opakuje.
+        Vzniká tím nesmyslný vektor několik hodnot. Proto chápu, že terminál
+        hlásí chybu. Je potřeba tuto chybu opravit do podoby 2 čísel.
+      </p>
+
+      <h3>Příklad:</h3>
+      <strong>"1 5 -3 4 2" => "-3 5"</strong>
+
+      <p>
+        Je potřeba čísla rozdělit a vybrat ty správné. Správná čísla jsou ty
+        které začínají tím nejmenším a končí tím největším číslem.
+        Tyto čísla spojíme do řetězce a oddělíme je mezerou.
+        Vznikne nám string čísel, které určí brzdnou dráhu pro žebřík.
+      </p>
+    '''
+    code = '''
+def vector_correction(str_nums)
+  
+end
+    '''
+    code_result = '''
+def vector_correction_result(str_nums)
+  return str_nums.split(" ").minmax.join(" ")
+end
+    '''
+
+    super info, code.trim(), code_result.trim()
+  end
+
+  def self.generate_input(length)
+    result = []
+    (0...length).step(1) do |i|
+      number = Helper.random_int(-10, 10)
+      result << number
+    end
+    return result.join(' ')
+  end
+
+  def code_evaluation code
+    input = STaskA.generate_input Helper.random_int(5, 10)
+
+    return """
+#{code}
+#{self.code_result}
+
+code = vector_correction('#{input}')
+code_result = vector_correction_result('#{input}')
+[code, code_result]
+    """.trim()
+  end
+end

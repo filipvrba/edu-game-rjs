@@ -10,7 +10,6 @@ export default class LevelAnimations < AnimationPlayer
   end
 
   def ready()
-    
     level_size = Vector2.new(self.parent.level_size.x, self.parent.level_size.y)
 
     tile = self.parent.level_tiles.find_child("sprite_l0_i0")

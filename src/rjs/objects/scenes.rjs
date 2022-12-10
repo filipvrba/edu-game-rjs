@@ -1,5 +1,7 @@
 import 'SScene', '../structs/s_scene'
 import 'LevelAnimations', '../components/level_animations'
+import 'STaskA', '../structs/task/s_task_a'
+import 'STaskB', '../structs/task/s_task_b'
 
 export default class Scenes < BasicObject
   IDLE_C = "idle_corner"
@@ -42,13 +44,12 @@ export default class Scenes < BasicObject
   end
 
   def ready
-    add_scene(IDLE_C, "Kde to jsem? Myslím si, že jsem zabloudil a potřebuji pomoct.", lambda do
+    add_scene(IDLE_C, "Mám namířeno do archeologického sektoru, kde mám zkoumat artefakty.", lambda do
       anims.play(IDLE_C)
     end)
-    add_scene IDLE_C, "Potřebuji se z této jeskyně dostat ven."
-    add_scene IDLE_C, "Vidím, že na konci jeskyně jsou dvěře a snad mě dostanou pryč."
-    add_scene IDLE_C, "Jasně, to je můj cíl. Dostat se k těm dvěřím."
-    add_scene IDLE_C, "Dobrá, tak jdem..."
+    add_scene IDLE_C, "Jsem tu nový a poslali mě kolegové tímto směrem."
+    add_scene IDLE_C, "Snad jsem nezabloudil a jdu správnou cestou."
+    add_scene IDLE_C, "Co se dá dělat, jsem zde a potřebuji se dostat na druhou stranu."
     add_scene(IDLE_C, nil, lambda do
       ui.active_click = false
       anims.play(MOVE_TO_L) do
@@ -57,23 +58,18 @@ export default class Scenes < BasicObject
       end
     end)
 
-    add_scene MOVE_TO_L, "Je tady žebřík a tak ho zkusím strčit aby, se více posunul dolů."
-    add_scene MOVE_TO_L, "A jeee, máme tu problém!"
-    add_scene MOVE_TO_L, "Žebřík nejde dát více dolů, kouknu se co píše terminál."
-    add_scene MOVE_TO_L, "Terminál vůbec nereáguje. Podívám se na něj více."
-    add_scene MOVE_TO_L, "Vždy v nouzovývh případech u sebe si nosím nářadí."
-    add_scene MOVE_TO_L, "Vidím, že vše je v pořádku, spíše bude chyba v softwéru."
-    add_scene MOVE_TO_L, "Zkusím se do něj hacknout a opravit chybu."
-    add_scene MOVE_TO_L, "Tak do toho..."
+    add_scene MOVE_TO_L, "Potřebuji se dostat po tomto žebříku dolů."
+    add_scene MOVE_TO_L, "Hmm, nejde vysunout ručně."
+    add_scene MOVE_TO_L, "Nejspíš se tu vše ovládá pomocí terminálu a proto se na něj podívám co píše."
     add_scene(MOVE_TO_L, nil, lambda do
       ui.ui_board.visible(true)
-      ui.ui_board.board_task.start("Zadej neco!", "Filip") do
+      ui.ui_board.board_task.start(STaskA.new) do  # Task 1
         ui.ui_board.visible(false)
         next_scene(MOVE_D_L, -1)
       end
     end)
 
-    add_scene(MOVE_D_L, "A je to, konečně mohu jít dolů", lambda do
+    add_scene(MOVE_D_L, "A je to, opravil jsem brzdnou dráhu žebříku a mohu bezpečně sejít dolů.", lambda do
       ui.active_click = false
       ladder.unlock() do
         ui.active_click = true
@@ -85,7 +81,8 @@ export default class Scenes < BasicObject
         ui.active_click = true
       end
     end)
-    add_scene MOVE_D_L, "Tak jsem dole, pujdu k tomu mostu a uvidím co budou za další potíže."
+    add_scene MOVE_D_L, "Tak jsem dole a vidím, že je jeskyně protáhlá a vidím její konec."
+    add_scene MOVE_D_L, "K těm dvěřím se musím dostat."
     add_scene(MOVE_D_L, nil, lambda do
       ui.active_click = false
       anims.play(MOVE_TO_B) do
@@ -93,28 +90,24 @@ export default class Scenes < BasicObject
         next_scene(MOVE_TO_B, -1)
       end
     end)
-
-    add_scene MOVE_TO_B, "Jsem u mostu a vidím, že není otevřený."
-    add_scene MOVE_TO_B, "Je tu terminál a vypisuje chyby."
-    add_scene MOVE_TO_B, "Píše, že vzdálenost mostu neni definována."
-    add_scene MOVE_TO_B, "V této jaskyni je snad vše rozbité."
-    add_scene MOVE_TO_B, "Ale co už, jsem tu já a vše zde opravím."
-    add_scene MOVE_TO_B, "Tak se na to tedy kouknem..."
+    
+    add_scene MOVE_TO_B, "Most sám od sebe nereáguje a já potřebuji přejít na druhou stranu."
+    add_scene MOVE_TO_B, "Dobrá, kouknu se do terminálu a uvidím v čem je problém."
     add_scene(MOVE_TO_B, nil, lambda do
       ui.ui_board.visible(true)
-      ui.ui_board.board_task.start("Zadej neco!", "Filip") do
+      ui.ui_board.board_task.start(STaskB.new) do  # Task 2
         ui.ui_board.visible(false)
         next_scene(MOVE_TO_D, -1)
       end
     end)
 
-    add_scene(MOVE_TO_D, "Skvělé, most se dokázal otevřít.", lambda do
+    add_scene(MOVE_TO_D, "Dobrá práce, opravil jsem unikátní id pro vektorovou pozici a most reaguje.", lambda do
       ui.active_click = false
       bridge.unlock() do
         ui.active_click = true
       end
     end)
-    add_scene MOVE_TO_D, "Teď mohu konečně odejít těmi dvěřmi."
+    add_scene MOVE_TO_D, "Most je vysunutý a já mohu konečně na druhou stranu."
     add_scene(MOVE_TO_D, nil, lambda do
       ui.active_click = false
       anims.play(MOVE_TO_D) do
@@ -123,7 +116,10 @@ export default class Scenes < BasicObject
       end
     end)
 
-    add_scene IDLE_D, "Tak jsem zde a teď s téhle jeskyně pujdu konečně pryč!"
+    add_scene IDLE_D, "Jsem u těch dvěří a píše se tu, že je tu archeologický sektor."
+    add_scene(IDLE_D, "Jsem tu správně.", lambda do
+      ui.active_click = false
+    end)
   end
 
   def add_scene(id, message, event = nil)

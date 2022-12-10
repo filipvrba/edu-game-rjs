@@ -10,10 +10,14 @@ export default class BoardTask < BasicObject
     @callback_done = nil
   end
 
-  def start task, result, &callback
-    @s_task = STask.new task, result
-    self.parent.task.innerHTML = task
+  def start task, &callback
+    @s_task = task
+
     self.parent.reset()
+    self.parent.task.innerHTML = @s_task.info
+    self.parent.mrb_code.value = @s_task.code
+    self.parent.mrb_code_change()
+
     self.parent.visible(true)
     @callback_done = callback
   end

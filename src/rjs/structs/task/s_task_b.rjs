@@ -1,0 +1,68 @@
+import 'STask', '../s_task'
+import 'Helper', '../../helper'
+
+export default class STaskB < STask
+  def initialize
+  info = '''
+      <p>
+        Most je zaseknutý z důvodu, že dostává špatnou ID hodnotu.
+        Jedná se o chybu programátora, kde špatně naprogramoval unikátní ID.
+        ID značí vektorovou pozici, na kterou se má most otevřít.
+      </p>
+
+      <h2>Oprava ID</h2>
+
+      <p>Jak vidím tak ID v mém nástroji, je obrácený.</p>
+
+      <h3>Příklad:</h3>
+      <strong>"f357a6" => "7a6f35"</strong>
+
+      <p>
+        Je potřeba, ID rozdělit do pole. Pole bude obsahovat <i>chars</i>,
+        které budou následně rozděleny na polovinu.
+      </p>
+
+      <h3>Příklad:</h3>
+      <strong>[["f", "3", "5"], ["7", "a", "6"]]</strong>
+
+      <p>
+        Dostaneme 2 pole, které převrátíme a spojíme dohromady.
+        Tím opravíme ID hodnotu, která by měla otevřít most na správnou vzdálenost.
+      </p>
+    '''
+    code = '''
+def id_correction(str)
+  
+end
+    '''
+    code_result = '''
+def id_correction_result(str)
+  return str.split("", str.length)
+    .partition.with_index { |_,i| i < str.length / 2 }.rotate.join
+end
+    '''
+
+    super info, code.trim(), code_result.trim()
+  end
+
+  def self.generate_input(length)
+    result = ""
+    (0...length).step(1) do |i|
+      result += Helper.random_char()
+    end
+    return result
+  end
+
+  def code_evaluation code
+    input = STaskB.generate_input Helper.random_int(10, 20)
+
+    return """
+#{code}
+#{self.code_result}
+
+code = id_correction('#{input}')
+code_result = id_correction_result('#{input}')
+[code, code_result]
+    """.trim()
+  end
+end

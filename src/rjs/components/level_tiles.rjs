@@ -59,6 +59,7 @@ export default class LevelTiles < Object2D
   end
 
   def update_scale scale
+    @scale = scale
     level_loop do |options|
       s_id = "sprite_l#{options.layer.i}_i#{options.dimension.i}"
       sprite = self.find_child(s_id)
