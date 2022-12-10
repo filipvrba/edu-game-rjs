@@ -1,14 +1,14 @@
 {
-  "example": "Example:",
+  "example": ["Example:"],
   "a": [
     "The terminal reports that there is no specified stopping distance for the ladder. The biggest issue I have to address is this. The ladder has to be lowered so I may securely descend it.",
-    "Vector Correction",
+    "Correct the Vector",
     "I examine the tool and discover that the same procedure keeps happening. As a result, a vector of meaningless values is produced. I can see why the terminal is showing an error because of this. In the form of two numerals, this mistake must be fixed.",
     "Divide the numbers and select the appropriate ones. The right numbers are those that go from the least to the highest starting value. These numerals are strung together, each number separated by a space. The sequence of values we receive will be used to calculate the ladder's braking distance."
   ],
   "b": [
     "Because it is receiving the incorrect ID value, the bridge is stuck. This is a programmer error because the special ID was entered wrongly. The ID shows where along a vector the bridge should open.",
-    "ID Correction",
+    "Correct the ID",
     "I can see that the ID in my tool is backwards.",
     "The ID must be separated into an array. The field will have <i>characters</i> in it, which will be divided in half.",
     "We receive 2 fields, which we flip over and combine. The ID value will be fixed as a result, and the bridge should then open to the proper distance."

@@ -31,6 +31,10 @@ export default class Scenes < BasicObject
     level_01.find_child('bridge')
   end
 
+  def language
+    self.get_scene(true).find_child('language')
+  end
+
   attr_reader :scenes, :current_scene
 
   def initialize
@@ -44,12 +48,12 @@ export default class Scenes < BasicObject
   end
 
   def ready
-    add_scene(IDLE_C, "Mám namířeno do archeologického sektoru, kde mám zkoumat artefakty.", lambda do
+    add_scene(IDLE_C, language.get_translate_scene(IDLE_C, 0), lambda do
       anims.play(IDLE_C)
     end)
-    add_scene IDLE_C, "Jsem tu nový a poslali mě kolegové tímto směrem."
-    add_scene IDLE_C, "Snad jsem nezabloudil a jdu správnou cestou."
-    add_scene IDLE_C, "Co se dá dělat, jsem zde a potřebuji se dostat na druhou stranu."
+    add_scene IDLE_C, language.get_translate_scene(IDLE_C, 1)
+    add_scene IDLE_C, language.get_translate_scene(IDLE_C, 2)
+    add_scene IDLE_C, language.get_translate_scene(IDLE_C, 3)
     add_scene(IDLE_C, nil, lambda do
       ui.active_click = false
       anims.play(MOVE_TO_L) do
@@ -58,18 +62,18 @@ export default class Scenes < BasicObject
       end
     end)
 
-    add_scene MOVE_TO_L, "Potřebuji se dostat po tomto žebříku dolů."
-    add_scene MOVE_TO_L, "Hmm, nejde vysunout ručně."
-    add_scene MOVE_TO_L, "Nejspíš se tu vše ovládá pomocí terminálu a proto se na něj podívám co píše."
+    add_scene MOVE_TO_L, language.get_translate_scene(MOVE_TO_L, 0)
+    add_scene MOVE_TO_L, language.get_translate_scene(MOVE_TO_L, 1)
+    add_scene MOVE_TO_L, language.get_translate_scene(MOVE_TO_L, 2)
     add_scene(MOVE_TO_L, nil, lambda do
       ui.ui_board.visible(true)
-      ui.ui_board.board_task.start(STaskA.new) do  # Task 1
+      ui.ui_board.board_task.start(STaskA.new(language)) do  # Task 1
         ui.ui_board.visible(false)
         next_scene(MOVE_D_L, -1)
       end
     end)
 
-    add_scene(MOVE_D_L, "A je to, opravil jsem brzdnou dráhu žebříku a mohu bezpečně sejít dolů.", lambda do
+    add_scene(MOVE_D_L, language.get_translate_scene(MOVE_D_L, 0), lambda do
       ui.active_click = false
       ladder.unlock() do
         ui.active_click = true
@@ -81,8 +85,8 @@ export default class Scenes < BasicObject
         ui.active_click = true
       end
     end)
-    add_scene MOVE_D_L, "Tak jsem dole a vidím, že je jeskyně protáhlá a vidím její konec."
-    add_scene MOVE_D_L, "K těm dvěřím se musím dostat."
+    add_scene MOVE_D_L, language.get_translate_scene(MOVE_D_L, 1)
+    add_scene MOVE_D_L, language.get_translate_scene(MOVE_D_L, 2)
     add_scene(MOVE_D_L, nil, lambda do
       ui.active_click = false
       anims.play(MOVE_TO_B) do
@@ -91,23 +95,23 @@ export default class Scenes < BasicObject
       end
     end)
     
-    add_scene MOVE_TO_B, "Most sám od sebe nereáguje a já potřebuji přejít na druhou stranu."
-    add_scene MOVE_TO_B, "Dobrá, kouknu se do terminálu a uvidím v čem je problém."
+    add_scene MOVE_TO_B, language.get_translate_scene(MOVE_TO_B, 0)
+    add_scene MOVE_TO_B, language.get_translate_scene(MOVE_TO_B, 1)
     add_scene(MOVE_TO_B, nil, lambda do
       ui.ui_board.visible(true)
-      ui.ui_board.board_task.start(STaskB.new) do  # Task 2
+      ui.ui_board.board_task.start(STaskB.new(language)) do  # Task 2
         ui.ui_board.visible(false)
         next_scene(MOVE_TO_D, -1)
       end
     end)
 
-    add_scene(MOVE_TO_D, "Dobrá práce, opravil jsem unikátní ID pro vektorovou pozici a most reaguje.", lambda do
+    add_scene(MOVE_TO_D, language.get_translate_scene(MOVE_TO_D, 0), lambda do
       ui.active_click = false
       bridge.unlock() do
         ui.active_click = true
       end
     end)
-    add_scene MOVE_TO_D, "Most je vysunutý a já mohu konečně na druhou stranu."
+    add_scene MOVE_TO_D, language.get_translate_scene(MOVE_TO_D, 1)
     add_scene(MOVE_TO_D, nil, lambda do
       ui.active_click = false
       anims.play(MOVE_TO_D) do
@@ -116,8 +120,8 @@ export default class Scenes < BasicObject
       end
     end)
 
-    add_scene IDLE_D, "Jsem u těch dvěří a píše se tu, že je tu archeologický sektor."
-    add_scene(IDLE_D, "Jsem tu správně.", lambda do
+    add_scene IDLE_D, language.get_translate_scene(IDLE_D, 0)
+    add_scene(IDLE_D, language.get_translate_scene(IDLE_D, 1), lambda do
       ui.active_click = false
     end)
   end

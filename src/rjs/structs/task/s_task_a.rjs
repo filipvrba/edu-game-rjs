@@ -2,32 +2,17 @@ import 'STask', '../s_task'
 import 'Helper', '../../helper'
 
 export default class STaskA < STask
-  def initialize
-  info = '''
-      <p>
-        Terminál hlásí, že žebř nemá definovanou brzdnou dráhu.
-        To je hlavní problém, co musím vyřešit. Je potřeba aby se mi
-        žebř posunul více dolů a já mohl po něm bezpečně sejít.
-      </p>
-      
-      <h2>Oprava Vektoru</h2
+  def initialize language
+  info = """
+      <p>#{language.get_translate_task(:a, 0)}</p>
+      <h2>#{language.get_translate_task(:a, 1)}</h2
+      <p>#{language.get_translate_task(:a, 2)}</p>
 
-      <p>
-        Koukám do nástroje a vidím, že jeden proces se neustále opakuje.
-        Vzniká tím nesmyslný vektor několik hodnot. Proto chápu, že terminál
-        hlásí chybu. Je potřeba tuto chybu opravit do podoby 2 čísel.
-      </p>
+      <h3>#{language.get_translate_task(STask::EXAMPLE, 0)}</h3>
+      <strong>'1 5 -3 4 2' => '-3 5'</strong>
 
-      <h3>Příklad:</h3>
-      <strong>"1 5 -3 4 2" => "-3 5"</strong>
-
-      <p>
-        Je potřeba čísla rozdělit a vybrat ty správné. Správná čísla jsou ty
-        které začínají tím nejmenším a končí tím největším číslem.
-        Tyto čísla spojíme do řetězce a oddělíme je mezerou.
-        Vznikne nám string čísel, které určí brzdnou dráhu pro žebřík.
-      </p>
-    '''
+      <p>#{language.get_translate_task(:a, 3)}</p>
+    """
     code = '''
 def vector_correction(str_nums)
   

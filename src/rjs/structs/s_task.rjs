@@ -1,4 +1,6 @@
 export default class STask
+  EXAMPLE = 'example'
+
   attr_accessor :info, :code, :code_result
 
   def initialize info, code, code_result

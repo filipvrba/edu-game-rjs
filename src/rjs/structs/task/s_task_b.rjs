@@ -2,34 +2,22 @@ import 'STask', '../s_task'
 import 'Helper', '../../helper'
 
 export default class STaskB < STask
-  def initialize
-  info = '''
-      <p>
-        Most je zaseknutý z důvodu, že dostává špatnou ID hodnotu.
-        Jedná se o chybu programátora, kde špatně naprogramoval unikátní ID.
-        ID značí vektorovou pozici, na kterou se má most otevřít.
-      </p>
+  def initialize language
+  info = """
+      <p>#{language.get_translate_task(:b, 0)}</p>
+      <h2>#{language.get_translate_task(:b, 1)}</h2>
+      <p>#{language.get_translate_task(:b, 2)}</p>
 
-      <h2>Oprava ID</h2>
+      <h3>#{language.get_translate_task(STask::EXAMPLE, 0)}</h3>
+      <strong>'f357a6' => '7a6f35'</strong>
 
-      <p>Jak vidím tak ID v mém nástroji, je obrácený.</p>
+      <p>#{language.get_translate_task(:b, 3)}</p>
 
-      <h3>Příklad:</h3>
-      <strong>"f357a6" => "7a6f35"</strong>
+      <h3>#{language.get_translate_task(STask::EXAMPLE, 0)}</h3>
+      <strong>[['f', '3', '5'], ['7', 'a', '6']]</strong>
 
-      <p>
-        Je potřeba, ID rozdělit do pole. Pole bude obsahovat <i>chars</i>,
-        které budou následně rozděleny na polovinu.
-      </p>
-
-      <h3>Příklad:</h3>
-      <strong>[["f", "3", "5"], ["7", "a", "6"]]</strong>
-
-      <p>
-        Dostaneme 2 pole, které převrátíme a spojíme dohromady.
-        Tím opravíme ID hodnotu, která by měla otevřít most na správnou vzdálenost.
-      </p>
-    '''
+      <p>#{language.get_translate_task(:b, 4)}</p>
+    """
     code = '''
 def id_correction(str)
   

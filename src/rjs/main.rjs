@@ -7,6 +7,7 @@ import 'Images', './objects/images'
 import 'Level01', './scenes/level_01'
 import 'UI', './objects/ui'
 import 'Scenes', './objects/scenes'
+import 'Language', './objects/language'
 
 
 document.querySelector('#app').innerHTML = "<canvas-2d></canvas-2d>"
@@ -14,6 +15,7 @@ canvas_2d = document.querySelector('canvas-2d')
 scene_r = canvas_2d.scene_r
 scene_r.connect "resize", lambda { |s| update_scene_pos(s) }
 
+scene_r.add Language.new, 'language'
 scene_r.add Scenes.new, 'scenes'
 scene_r.add UI.new, 'ui'
 
