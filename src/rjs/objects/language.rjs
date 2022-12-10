@@ -9,7 +9,16 @@ export default class Language < BasicObject
 
   def initialize
     super
-    @target = ENGLISH
+    @target = client_lang()
+  end
+
+  def client_lang()
+    case navigator.language
+    when CZECH
+      return CZECH
+    else
+      return ENGLISH
+    end
   end
 
   def get_translate_scene id, position
