@@ -1,0 +1,30 @@
+{
+  "idle_corner": [
+    "Mám namířeno do archeologického sektoru, kde mám zkoumat artefakty.",
+    "Jsem tu nový a poslali mě kolegové tímto směrem.",
+    "Snad jsem nezabloudil a jdu správnou cestou.",
+    "Co se dá dělat, jsem zde a potřebuji se dostat na druhou stranu."
+  ],
+  "move_to_ladder": [
+    "Potřebuji se dostat po tomto žebříku dolů.",
+    "Hmm, nejde vysunout ručně.",
+    "Nejspíš se tu vše ovládá pomocí terminálu a proto se na něj podívám co píše."
+  ],
+  "move_down_ladder": [
+    "A je to, opravil jsem brzdnou dráhu žebříku a mohu bezpečně sejít dolů.",
+    "Tak jsem dole a vidím, že je jeskyně protáhlá a vidím její konec.",
+    "K těm dvěřím se musím dostat."
+  ],
+  "move_to_bridge": [
+    "Most sám od sebe nereáguje a já potřebuji přejít na druhou stranu.",
+    "Dobrá, kouknu se do terminálu a uvidím v čem je problém."
+  ],
+  "move_to_door": [
+    "Dobrá práce, opravil jsem unikátní ID pro vektorovou pozici a most reaguje.",
+    "Most je vysunutý a já mohu konečně na druhou stranu."
+  ],
+  "idle_door": [
+    "Jsem u těch dvěří a píše se tu, že je tu archeologický sektor.",
+    "Jsem tu správně."
+  ]
+}

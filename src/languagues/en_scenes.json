@@ -1,0 +1,30 @@
+{
+  "idle_corner": [
+    "I'm going to look at the artifacts at the archaeological area.",
+    "Since I'm new here, my coworkers sent me in this route.",
+    "I hope I'm on the correct track and haven't lost my way.",
+    "I need to cross over from where I am now."
+  ],
+  "move_to_ladder": [
+    "I have to descend this ladder.",
+    "No manual ejection, hmm.",
+    "The terminal is probably used to control everything in this location, so I'll see what it says."
+  ],
+  "move_down_ladder": [
+    "After adjusting the ladder's braking distance, I can now securely descend.",
+    "Now that I'm lower, I can see how long the cave is and where it ends.",
+    "I must reach those doors."
+  ],
+  "move_to_bridge": [
+    "I must cross the bridge because it can't operate on its own.",
+    "Okay, I'll check the terminal to see what the issue is."
+  ],
+  "move_to_door": [
+    "Well done; the bridge is responding now that I fixed the vector position's unique ID.",
+    "I can now cross the expanded bridge to the other side."
+  ],
+  "idle_door": [
+    "When I get to the door, it states there is an archaeological section.",
+    "I'm right here."
+  ]
+}

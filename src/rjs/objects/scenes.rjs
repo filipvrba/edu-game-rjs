@@ -101,7 +101,7 @@ export default class Scenes < BasicObject
       end
     end)
 
-    add_scene(MOVE_TO_D, "Dobrá práce, opravil jsem unikátní id pro vektorovou pozici a most reaguje.", lambda do
+    add_scene(MOVE_TO_D, "Dobrá práce, opravil jsem unikátní ID pro vektorovou pozici a most reaguje.", lambda do
       ui.active_click = false
       bridge.unlock() do
         ui.active_click = true

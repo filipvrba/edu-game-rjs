@@ -1,0 +1,16 @@
+{
+  "example": "Příklad:",
+  "a": [
+    "Terminál hlásí, že žebř nemá definovanou brzdnou dráhu. To je hlavní problém, co musím vyřešit. Je potřeba aby se mi žebř posunul více dolů a já mohl po něm bezpečně sejít.",
+    "Oprava Vektoru",
+    "Koukám do nástroje a vidím, že jeden proces se neustále opakuje. Vzniká tím nesmyslný vektor několik hodnot. Proto chápu, že terminál hlásí chybu. Je potřeba tuto chybu opravit do podoby 2 čísel.",
+    "Je potřeba čísla rozdělit a vybrat ty správné. Správná čísla jsou ty které začínají tím nejmenším a končí tím největším číslem. Tyto čísla spojíme do řetězce a oddělíme je mezerou. Vznikne nám string čísel, které určí brzdnou dráhu pro žebřík."
+  ],
+  "b": [
+    "Most je zaseknutý z důvodu, že dostává špatnou ID hodnotu. Jedná se o chybu programátora, kde špatně naprogramoval unikátní ID. ID značí vektorovou pozici, na kterou se má most otevřít.",
+    "Oprava ID",
+    "Jak vidím tak ID v mém nástroji, je obrácený.",
+    "Je potřeba, ID rozdělit do pole. Pole bude obsahovat <i>chars</i>, které budou následně rozděleny na polovinu.",
+    "Dostaneme 2 pole, které převrátíme a spojíme dohromady. Tím opravíme ID hodnotu, která by měla otevřít most na správnou vzdálenost."
+  ]
+}
