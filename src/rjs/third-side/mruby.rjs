@@ -1,11 +1,13 @@
+import ['ENV'], '../env'
+
 export default class MRuby
-  API_URL = "https://mrbapi.fly.dev/"
 
   def self.get_result(mrb_code, &callback)
     encode_mrb_code = encodeURIComponent(mrb_code)
-    uri = "#{API_URL}?mrb=#{encode_mrb_code}"
+    uri = "#{ENV.VITE_MRBAPI_URL}&mrb=#{encode_mrb_code}"
+    
     Net.get_json(uri) do |data|
-      callback(data["result"])
+      callback(data["result"], data["message"])
     end
   end
 end

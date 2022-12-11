@@ -52,27 +52,39 @@ export default class UIBoard < BasicObject
       @mrb_result.value = "Processing of the code is ongoing..."
       code = @board_task.s_task.code_evaluation(@mrb_code.value)
 
-      MRuby.get_result(code) do |r|
-        unless r == "true" or r == "false"
-          results = r.split(';')
-          result_a = results[0]
-          result_b = results[1]
-          result_equals = result_a == result_b
-          result_code = result_equals ? 200 : 202
+      MRuby.get_result(code) do |r, m|
+        unless r == undefined
+          unless r == "true" or r == "false"
+            results = r.split(';')
+            result_a = results[0]
+            result_b = results[1]
+            result_equals = result_a == result_b
+            result_code = result_equals ? 200 : 202
 
-          button_ok_access(result_a, result_b)
+            button_ok_access(result_a, result_b)
 
-          @mrb_result.value = "|#{result_code}|\n\n" +
-            "result: '#{result_a}'\n" +
-            "expected_result: '#{result_b}'\nequals: #{result_equals}"
+            @mrb_result.value = "|#{result_code}|\n\n" +
+              "result: '#{result_a}'\n" +
+              "expected_result: '#{result_b}'\nequals: #{result_equals}"
+          else
+            @mrb_result.value = error_message()
+          end
         else
-          @mrb_result.value = "|400|\n\nAs the code was being processed, an unexpected error happened."
+          @mrb_result.value = error_message(m)
         end
       end
     else
       reset()
       @board_task.callback_done()
     end
+  end
+
+  def error_message(mes = nil)
+    report = "|400|\n\nAs the code was being processed, an unexpected error happened."
+    if mes
+      report += "\n\nreport: #{mes}"
+    end
+    return report
   end
 
   def mrb_code_change()
