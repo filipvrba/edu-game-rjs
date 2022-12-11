@@ -30,4 +30,5 @@ export default class STask {
   }
 };
 
-STask.EXAMPLE = "example"
+STask.EXAMPLE = "example";
+STask.UNIQ_SYM = "<<|>>"

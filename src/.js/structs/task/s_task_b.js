@@ -59,7 +59,7 @@ ${this.code_result}
 
 code = id_correction('${input}')
 code_result = id_correction_result('${input}')
-[code, code_result]
+"\#{code}${STask.UNIQ_SYM}\#{code_result}"
     `}`.trim()
   }
 }

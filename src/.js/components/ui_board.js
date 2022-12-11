@@ -1,5 +1,6 @@
 import MRuby from "../third-side/mruby";
 import BoardTask from "./ui_board/board_task";
+import STask from "../structs/s_task";
 
 export default class UIBoard extends BasicObject {
   get is_mrb_code_empty() {
@@ -78,7 +79,7 @@ export default class UIBoard extends BasicObject {
         } else if (r == "true" || r == "false") {
           this._mrb_result.value = this.error_message()
         } else {
-          let results = r.split(";");
+          let results = r.split(STask.UNIQ_SYM);
           let result_a = results[0];
           let result_b = results[1];
           let result_equals = result_a == result_b;

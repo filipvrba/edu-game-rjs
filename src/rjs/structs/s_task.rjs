@@ -1,5 +1,6 @@
 export default class STask
   EXAMPLE = 'example'
+  UNIQ_SYM = '<<|>>'
 
   attr_accessor :info, :code, :code_result
 

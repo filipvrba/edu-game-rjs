@@ -55,7 +55,7 @@ ${this.code_result}
 
 code = vector_correction('${input}')
 code_result = vector_correction_result('${input}')
-[code, code_result]
+"\#{code}${STask.UNIQ_SYM}\#{code_result}"
     `}`.trim()
   }
 }

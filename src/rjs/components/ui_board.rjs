@@ -1,5 +1,6 @@
 import 'MRuby', '../third-side/mruby'
 import 'BoardTask', './ui_board/board_task'
+import 'STask', '../structs/s_task'
 
 export default class UIBoard < BasicObject
   CLICK = 'click'
@@ -55,7 +56,7 @@ export default class UIBoard < BasicObject
       MRuby.get_result(code) do |r, m|
         unless r == undefined
           unless r == "true" or r == "false"
-            results = r.split(';')
+            results = r.split(STask::UNIQ_SYM)
             result_a = results[0]
             result_b = results[1]
             result_equals = result_a == result_b
