@@ -3,6 +3,16 @@
   --box-shadow: 0 1px 3px rgba( 0, 0, 0, 0.12 ), 0 1px 2px rgba( 0, 0, 0, 0.24 );
   --norm-radius: 10px;
   --board-pad-top: 30px;
+  --table-solid: #e1e4e5;
+}
+
+body {
+  background-color: var( --table-solid );
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+}
+
+p {
+  font-size: 18px;
 }
 
 .panel {
@@ -72,4 +82,19 @@ button {
 
 .blue[disabled] {
   background: grey;
+}
+
+hr {
+  border-top: 1px solid var( --table-solid );
+}
+
+@media( max-height: 700px ) {
+
+  p, h1, h2, h3, li {
+    color: var( --dark-font-color );
+  }
+
+  .panel {
+    border-color: #3a3835
+  }
 }

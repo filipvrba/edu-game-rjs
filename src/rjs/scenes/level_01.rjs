@@ -12,17 +12,18 @@ export default class Level01 < Level
 
   def initialize
     super "maps/level_01.json"
-    @resize_handler = lambda { |s| resize(s) }
+    # @resize_handler = lambda { |s| resize(s) }
     @level_tile_done = lambda { level_ready() }
     @lt_sr_handler = lambda { |s| lt_sprite_ready(s) }
 
     @level_animations = LevelAnimations.new
     @level_tiles = LevelTiles.new
     @json = level_01_json
+    @scale = 2.3
   end
 
   def ready()
-    self.get_scene(true).connect('resize', @resize_handler)
+    # self.get_scene(true).connect('resize', @resize_handler)
     @level_tiles.connect(LevelTiles::LEVEL_DONE, @level_tile_done)
     @level_tiles.t_grotto.connect(Tile::SPRITE_READY, @lt_sr_handler)
 
@@ -58,6 +59,7 @@ export default class Level01 < Level
   def resize size
     scale_size = Vector2.new(size.w / @level_size.w, size.h / @level_size.h)
     _scale = Math.min(scale_size.w, scale_size.h)
+    _scale = Math.min(_scale, @scale)
 
     @level_tiles.update_scale _scale
 
@@ -75,7 +77,7 @@ export default class Level01 < Level
   end
     
   def free()
-    self.get_scene(true).disconnect('resize', @resize_handler)
+    # self.get_scene(true).disconnect('resize', @resize_handler)
     self.disconnect Level::JSON_READY, @json_ready_handler
     @level_tiles.t_grotto.disconnect(Tile::SPRITE_READY, @lt_sr_handler)
     @level_tiles.disconnect(LevelTiles::LEVEL_DONE, @level_tile_done)

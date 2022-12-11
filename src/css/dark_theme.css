@@ -3,6 +3,7 @@
   --dark-white-body: #131516;
   --dark-font-color: #e8e6e3;
   --dark-white-box: #2b2a33;
+  --dark-table-solid: #383d3f;
 }
 
 @media ( prefers-color-scheme: dark ) {
@@ -26,5 +27,9 @@
     background-color: var(--dark-white-box);
     border-color: #75747a;
     color: white;
+  }
+
+  hr {
+    border-top: 1px solid var( --dark-table-solid );
   }
 }
