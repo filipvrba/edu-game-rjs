@@ -5,7 +5,7 @@ export default class MRuby
   def self.get_result(mrb_code, &callback)
     encode_mrb_code = encodeURIComponent(mrb_code)
     mrb_token = ENV.MRBAPI_TOKEN
-    console.log mrb_code
+    console.log mrb_token
     uri = "#{ENV.VITE_MRBAPI_URL}?token=#{mrb_token}&mrb=#{encode_mrb_code}"
     
     Net.get_json(uri) do |data|
