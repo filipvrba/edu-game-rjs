@@ -29,6 +29,8 @@ export default class STaskB extends STask {
       "b",
       4
     )}</p>
+
+      ${STask.get_docs(language)}
     `}`;
 
     let code = `${`\ndef id_correction(str)\n  \nend\n    `}`;

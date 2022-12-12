@@ -12,6 +12,8 @@ export default class STaskA < STask
       <strong>'1 5 -3 4 2' => '-3 5'</strong>
 
       <p>#{language.get_translate_task(:a, 3)}</p>
+
+      #{STask.get_docs(language)}
     """
     code = '''
 def vector_correction(str_nums)

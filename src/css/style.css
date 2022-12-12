@@ -90,7 +90,7 @@ hr {
 
 @media( max-height: 700px ) {
 
-  p, h1, h2, h3, li {
+  .panel p {
     color: var( --dark-font-color );
   }
 

@@ -1,5 +1,9 @@
 {
   "example": ["Example:"],
+  "docs": [
+    "Documents:",
+    "I'll provide you a few docs here to aid you. They might be necessary while choosing functions."
+  ],
   "a": [
     "The terminal reports that there is no specified stopping distance for the ladder. The biggest issue I have to address is this. The ladder has to be lowered so I may securely descend it.",
     "Correct the Vector",

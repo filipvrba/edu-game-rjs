@@ -1,5 +1,9 @@
 {
   "example": ["Příklad:"],
+  "docs": [
+    "Dokumenty:",
+    "Jako nápovědu ti zde uvedu pár dokumentů. Možná je budeš potřebovat při výběru funkcí."
+  ],
   "a": [
     "Terminál hlásí, že žebř nemá definovanou brzdnou dráhu. To je hlavní problém, co musím vyřešit. Je potřeba aby se mi žebř posunul více dolů a já mohl po něm bezpečně sejít.",
     "Opravte Vector",

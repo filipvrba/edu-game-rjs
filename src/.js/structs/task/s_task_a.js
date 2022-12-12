@@ -21,6 +21,8 @@ export default class STaskA extends STask {
       "a",
       3
     )}</p>
+
+      ${STask.get_docs(language)}
     `}`;
 
     let code = `${`

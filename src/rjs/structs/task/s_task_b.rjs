@@ -17,6 +17,8 @@ export default class STaskB < STask
       <strong>[['f', '3', '5'], ['7', 'a', '6']]</strong>
 
       <p>#{language.get_translate_task(:b, 4)}</p>
+
+      #{STask.get_docs(language)}
     """
     code = '''
 def id_correction(str)

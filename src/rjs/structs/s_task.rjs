@@ -1,5 +1,6 @@
 export default class STask
   EXAMPLE = 'example'
+  DOCS = 'docs'
   UNIQ_SYM = '<<|>>'
 
   attr_accessor :info, :code, :code_result
@@ -8,5 +9,16 @@ export default class STask
     @info = info
     @code = code
     @code_result = code_result
+  end
+
+  def self.get_docs(language)
+    return """
+    <h3>#{language.get_translate_task(STask::DOCS, 0)}</h3>
+    <p>#{language.get_translate_task(STask::DOCS, 1)}</p>
+    <ul>
+      <li><a href='https://mruby.org/docs/api/Array.html'>Array</a></li>
+      <li><a href='https://mruby.org/docs/api/String.html'>String</a></li>
+    </ul>
+    """
   end
 end
