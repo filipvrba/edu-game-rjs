@@ -37,8 +37,8 @@ export default class STask {
       1
     )}</p>
     <ul>
-      <li><a href='https://mruby.org/docs/api/Array.html'>Array</a></li>
-      <li><a href='https://mruby.org/docs/api/String.html'>String</a></li>
+      <li><a target='_blank' href='https://mruby.org/docs/api/Array.html'>Array</a></li>
+      <li><a target='_blank' href='https://mruby.org/docs/api/String.html'>String</a></li>
     </ul>
     `}`
   }

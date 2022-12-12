@@ -16,8 +16,8 @@ export default class STask
     <h3>#{language.get_translate_task(STask::DOCS, 0)}</h3>
     <p>#{language.get_translate_task(STask::DOCS, 1)}</p>
     <ul>
-      <li><a href='https://mruby.org/docs/api/Array.html'>Array</a></li>
-      <li><a href='https://mruby.org/docs/api/String.html'>String</a></li>
+      <li><a target='_blank' href='https://mruby.org/docs/api/Array.html'>Array</a></li>
+      <li><a target='_blank' href='https://mruby.org/docs/api/String.html'>String</a></li>
     </ul>
     """
   end
