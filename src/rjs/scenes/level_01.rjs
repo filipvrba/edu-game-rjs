@@ -19,7 +19,7 @@ export default class Level01 < Level
     @level_animations = LevelAnimations.new
     @level_tiles = LevelTiles.new
     @json = level_01_json
-    @scale = 2.3
+    @scale = 2.3  # 2.3
   end
 
   def ready()

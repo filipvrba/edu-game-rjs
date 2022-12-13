@@ -3,7 +3,7 @@
   --box-shadow: 0 1px 3px rgba( 0, 0, 0, 0.12 ), 0 1px 2px rgba( 0, 0, 0, 0.24 );
   --norm-radius: 10px;
   --board-pad-top: 30px;
-  --table-solid: #e1e4e5;
+  --table-solid: #151023;
 }
 
 body {
@@ -26,7 +26,7 @@ p {
 
   border-style: solid;
   border-radius: 30px;
-  border-color: rgba(41, 41, 41, 0.3);
+  border-color: #3a3835
 }
 
 .board {
@@ -85,16 +85,9 @@ button {
 }
 
 hr {
-  border-top: 1px solid var( --table-solid );
+  border-top: 1px solid #e1e4e5;
 }
 
-@media( max-height: 700px ) {
-
-  .panel p {
-    color: var( --dark-font-color );
-  }
-
-  .panel {
-    border-color: #3a3835
-  }
+.panel p {
+  color: var( --dark-font-color );
 }
