@@ -115,7 +115,7 @@ I can render the *texture* since the rendering mechanism is programmed to do so.
 It should be stressed here that this project renders *pixel textures*.
 Smaller overall texture allows for more pixel-based images. 
 
-![tileset_2](/public/png/tileset_2.png)
+![tileset_2](/docs/public/png/tileset_2.png)
 
 ### 4.1 Tile
 Recalculating the *texture* is done automatically.
@@ -123,7 +123,7 @@ This is because tile *sprite position* data was created in a structure.
 The ability to create custom levels depends on each sprite having its own ID.
 In addition, some sprites must be able to be animated using other *sprites*.
 
-![sprite_test_01](/public/gif/sprite_test_01.gif)
+![sprite_test_01](/docs/public/gif/sprite_test_01.gif)
 
 ### 4.2 Static sprites
 They are perfect for level development for *static sprites*.
@@ -131,7 +131,7 @@ After creating a level in the [Tiled editor](https://www.mapeditor.org/) and exp
 the project's sprite placements can be identified.
 This will automatically create it level. 
 
-![tiled_create_level_01](/public/gif/tiled_create_level_01.gif)
+![tiled_create_level_01](/docs/public/gif/tiled_create_level_01.gif)
 
 ## 5 Character
 The character, which I needed to draw and animate, appeared after the level.
@@ -145,7 +145,7 @@ and moving sprites with *AnimationSprite* was sufficient.
 A separate item is what the character tries to be.
 I figured if we moved the character, the *AnimationSprite* would run automatically. 
 
-![move_test_01](/public/gif/move_test_01.gif)
+![move_test_01](/docs/public/gif/move_test_01.gif)
 
 ## 6 Animation
 Two items that form the foundation of the rendering *engine* are categorised as *animation*.
@@ -206,7 +206,7 @@ The task entry will then be presented in *UI Task*.
 An object containing functions for activating and rendering text
 is constructed in order for everything to function. 
 
-![ui_preview_01](/public/png/ui_preview_01.png)
+![ui_preview_01](/docs/public/png/ui_preview_01.png)
 
 ## 8 Scenario
 It is necessary to write a script in order to progress this instructive game.
@@ -253,13 +253,13 @@ Once the character is agreed upon, he renders a *Task*
 containing the requested *task*. The visibility *Task* will be
 canceled and a new scenario will be selected if *TaskA* has been completed. 
 
-![scene_preview_01](/public/gif/scene_preview_01.gif)
+![scene_preview_01](/docs/public/gif/scene_preview_01.gif)
 
 ## 9 Translation
 *Czech* is my native tongue, so I want to stick with it for the duration of the project.
 I developed a function that can toggle text localization as a result.
 
-![languague_preview_01](/public/png/languague_preview_01.png)
+![languague_preview_01](/docs/public/png/languague_preview_01.png)
 
 The *Czech* text has to be translated into *English* and saved as a *json* file.
 The translated texts were then converted into site code by
@@ -332,16 +332,16 @@ evaluate the result using a *expected result*.
 The player has successfully performed the supplied *Task*
 if the outcome of the *Ruby* script is same. 
 
-![mrb_result_01](/public/png/mrb_result_01.png)
+![mrb_result_01](/docs/public/png/mrb_result_01.png)
 
 ## 11 Signpost
 I'll direct you to the following article if you're curious about the creation of an *API* for *Mruby*.
 
-- ![API development]()
+- [API development](https://github.com/filipvrba/mrb-api/blob/main/docs/en-api_develop.md)
 
 I'll send you back to the overview with this link if you want to.
 
-- ![A brief overview of Edu Game]()
+- [A brief overview of Edu Game](/docs/en-edu_game.md)
 
 ### 11.1 Repositories
 All project and tool repositories may be found here. 

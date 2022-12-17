@@ -54,7 +54,7 @@ For further information, I'll direct you to other articles.
 They will talk about the evolution of the assigned project and my approach to it. 
 
 - [Project development](/docs/en-edu_develop.md)
-- [API development](/docs/en-api_develop.md)
+- [API development](https://github.com/filipvrba/mrb-api/blob/main/docs/en-api_develop.md)
 
 *I'll direct you to this link if you wish to try this project:*
 - [Edu Game](https://edu-game-rjs.vercel.app/) *(There is no need to download anything because it is an online application.)*
