@@ -13,13 +13,13 @@ This interactive game is part of an educational project.
 The character responds to the circumstance automatically when the player clicks the mouse position.
 It is not a platform game where the player may move around by walking. 
 
-![edu_game_01](/public/png/edu_game_01.png)
+![edu_game_01](/docs/public/png/edu_game_01.png)
 
 Ruby script puzzle-solving is the key to this project.
 The persona arrives at the terminal and considers how to deal with this issue.
 A task with instructions on how to proceed while accomplishing it is briefly tossed at the player. 
 
-![edu_game_02](/public/png/edu_game_02.png)
+![edu_game_02](/docs/public/png/edu_game_02.png)
 
 The character can get past the roadblock if the player successfully completes the task and fixes the terminal's functionality.
 With this, he advances toward his objective. 
@@ -40,21 +40,21 @@ A url link can be used to start the web application.
 After entering the URL for the API and adding a Mruby script, we obtain the *result* in JSON format.
 Therefore, it is simple to incorporate into the Edu Game project. 
 
-![mrb_api_01](/public/png/mrb_api_01.png)
+![mrb_api_01](/docs/public/png/mrb_api_01.png)
 
 ### 2.2 Implementation
 The result process' functionality will be developed after the project's implementation.
 The project is waiting for a *result* from the API when the send button is clicked when filling out the ruby script in Edu Game.
 If everything goes according to plan, the Edu Game will record the anticipated outcome, and everything will be compared. 
 
-![edu_game_03](/public/png/edu_game_03.png)
+![edu_game_03](/docs/public/png/edu_game_03.png)
 
 ## 3 Signpost
 For further information, I'll direct you to other articles.
 They will talk about the evolution of the assigned project and my approach to it. 
 
-- [Project development](/en-edu_develop.md)
-- [API development](/en-api_develop.md)
+- [Project development](/docs/en-edu_develop.md)
+- [API development](/docs/en-api_develop.md)
 
 *I'll direct you to this link if you wish to try this project:*
 - [Edu Game](https://edu-game-rjs.vercel.app/) *(There is no need to download anything because it is an online application.)*
