@@ -341,7 +341,7 @@ I'll direct you to the following article if you're curious about the creation of
 
 I'll send you back to the overview with this link if you want to.
 
-- [A brief overview of Edu Game](/docs/en-edu_game.md)
+- [A brief overview of Edu Game](/README.md)
 
 ### 11.1 Repositories
 All project and tool repositories may be found here. 
