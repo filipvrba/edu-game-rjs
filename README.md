@@ -58,7 +58,7 @@ They will talk about the evolution of the assigned project and my approach to it
 - [API development](https://github.com/filipvrba/mrb-api/blob/main/docs/en-api_develop.md)
 
 *I'll direct you to this link if you wish to try this project:*
-- [Edu Game](https://edu-game-rjs.vercel.app/) *(There is no need to download anything because it is an online application.)*
+- [**Edu Game**](https://edu-game-rjs.vercel.app/) *(There is no need to download anything because it is an online application.)*
 
 *Alternatively, I'll direct your attention to this video if you're interested in seeing the gameplay:*
 - [Edu Game | Gameplay | 05](https://youtu.be/Gg62pZX0Ygg) *(The video is only in Czech.)*
