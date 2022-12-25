@@ -32,7 +32,7 @@ end
     `}`;
     let code_result = `${`
 def vector_correction_result(str_nums)
-  return str_nums.split(" ").minmax.join(" ")
+  return str_nums.split.map{ |s| s.to_i }.minmax.join(" ")
 end
     `}`;
     super(info, code.trim(), code_result.trim())
