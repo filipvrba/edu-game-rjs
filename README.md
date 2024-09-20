@@ -1,0 +1,3 @@
+# Edu Game
+
+wasm version
