@@ -1,0 +1,1 @@
+window.__mruby = query => new Ruby().Execute(query)

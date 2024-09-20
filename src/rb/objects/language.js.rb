@@ -1,0 +1,45 @@
+import 'cs_scenes', '../../language/cs_scenes.json'
+import 'cs_tasks', '../../language/cs_tasks.json'
+import 'en_scenes', '../../language/en_scenes.json'
+import 'en_tasks', '../../language/en_tasks.json'
+
+export default class Language < BasicObject
+  ENGLISH = :en
+  CZECH = :cs
+
+  def initialize
+    super
+    @target = client_lang()
+  end
+
+  def client_lang()
+    case navigator.language
+    when CZECH, 'cs-CZ'
+      return CZECH
+    else
+      return ENGLISH
+    end
+  end
+
+  def get_translate_scene id, position
+    case @target
+    when ENGLISH
+      return en_scenes[id][position]
+    when CZECH
+      return cs_scenes[id][position]
+    else
+      return nil
+    end
+  end
+
+  def get_translate_task id, position
+    case @target
+    when ENGLISH
+      return en_tasks[id][position]
+    when CZECH
+      return cs_tasks[id][position]
+    else
+      return nil
+    end
+  end
+end

@@ -1,0 +1,126 @@
+import 'MRuby', '../third-side/mruby'
+import 'BoardTask', './ui_board/board_task'
+import 'STask', '../structs/s_task'
+
+export default class UIBoard < BasicObject
+  CLICK = 'click'
+  CHANGE = 'input'
+
+  def is_mrb_code_empty
+    @mrb_code.value.length <= 0
+  end
+
+  attr_reader :board_task, :task, :mrb_code
+
+  def initialize
+    super
+    @button_ok_click_handler = lambda { button_ok_click() }
+    @mrb_code_change_handler = lambda { mrb_code_change() }
+    @mruby_print_handler     = lambda { |e| mruby_result(e.detail.value) }
+
+    @board = document.getElementById('board')
+    @task = document.getElementById('board-task')
+    @mrb_code = document.getElementById('board-mrb-code')
+    @mrb_result = document.getElementById('board-mrb-result')
+    @button_ok = document.getElementById('board-button-ok')
+
+    @is_button_ok_access = false
+    @board_task = BoardTask.new
+  end
+
+  def ready()
+    @button_ok.addEventListener(CLICK, @button_ok_click_handler)
+    @mrb_code.addEventListener(CHANGE, @mrb_code_change_handler)
+    document.querySelector('#app').addEventListener('mruby-print', @mruby_print_handler)
+
+    self.add @board_task, "board_task"
+  end
+
+  def visible boollean
+    if boollean
+      @board.style.visibility = 'visible'
+    else
+      @board.style.visibility = 'hidden'
+    end
+
+    self.parent.active_click = !boollean
+  end
+
+  def button_ok_click()
+    if is_mrb_code_empty
+      return
+    end
+
+    unless @is_button_ok_access
+      # @mrb_result.value = "Processing of the code is ongoing..."
+      @mrb_result.value = error_message()
+      code = @board_task.s_task.code_evaluation(@mrb_code.value)
+
+      __mruby(code)
+    else
+      reset()
+      @board_task.callback_done()
+    end
+  end
+
+  def mruby_result(text)
+    unless text == undefined
+      unless text == "true" or text == "false"
+        results = text.split(STask::UNIQ_SYM)
+        result_a = results[0]
+        result_b = results[1]
+        result_equals = result_a == result_b
+        result_code = result_equals ? 200 : 202
+
+        button_ok_access(result_a, result_b)
+
+        @mrb_result.value = "|#{result_code}|\n\n" +
+          "result: '#{result_a}'\n" +
+          "expected_result: '#{result_b}'\nequals: #{result_equals}"
+      else
+        @mrb_result.value = error_message()
+      end
+    # else
+    #   @mrb_result.value = error_message(m)
+    end
+  end
+
+  def error_message(mes = nil)
+    report = "|400|\n\nAs the code was being processed, an unexpected error happened."
+    if mes
+      report += "\n\nreport: #{mes}"
+    end
+    return report
+  end
+
+  def mrb_code_change()
+    if is_mrb_code_empty
+      @button_ok.disabled = true
+    else
+      @button_ok.disabled = false
+    end
+  end
+
+  def button_ok_access(result_a, result_b)
+    if @board_task.s_task and (result_a and result_b) and result_a == result_b
+      @is_button_ok_access = true
+      @button_ok.className = 'green'
+    else
+      @is_button_ok_access = false
+      @button_ok.className = 'blue'
+    end
+  end
+
+  def reset()
+    @mrb_code.value = ""
+    @mrb_result.value = ""
+    button_ok_access(nil, nil)
+  end
+
+  def free()
+    @button_ok.removeEventListener(CLICK, @button_ok_click_handler)
+    @mrb_code.removeEventListener(CHANGE, @mrb_code_change_handler)
+    document.querySelector('#app').addEventListener('mruby-print', @mruby_print_handler)
+    super
+  end
+end 
