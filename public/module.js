@@ -1,5 +1,6 @@
 var Module = {
-  print: (function(text) {
+  print: (function() {
+    return function(text) {
     if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
     
     customEvent = new CustomEvent('mruby-print', {
@@ -8,5 +9,5 @@ var Module = {
       }
     })
     document.querySelector('#app').dispatchEvent(customEvent);
-  })
+  }})()
 }
