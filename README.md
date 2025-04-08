@@ -1,6 +1,8 @@
 # Edu Game
 A brief description of the MRuby functionality, a vital component of the Edu Game project. 
 
+**Please note that this repository is now archived and no longer actively maintained.**
+
 ### Content
 - [1 Description](#1-description)
 - [2 API MRuby](#2-api-mruby)
